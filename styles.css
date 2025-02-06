@@ -9,6 +9,7 @@ body {
     background-color: white;
     color: white;
     font-family: Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 :root {
@@ -299,23 +300,40 @@ body {
 .nav-item {
     justify-content: center;
     align-items: center;
-    width: 3.5em;
+    width: 3em;
     transition: width .5s cubic-bezier(.16, 1, .3, 1);
     display: flex;
     position: relative;
 }
 
 .nav-item.hover {
-    width: 5em;
+    width: 4.5em;
 }
 
 .nav-item.sibling-close {
-    width: 4.5em;
+    width: 4em;
+}
+
+.nav-item.sibling-far {
+    width: 3.5em;
+}
+
+/* @media screen and (max-width:500px) {
+  .nav-item{
+    width: 3em;
+  }
+  .nav-item.hover {
+    width: 6em;
+}
+
+.nav-item.sibling-close {
+    width: 5em;
 }
 
 .nav-item.sibling-far {
     width: 4em;
 }
+} */
 
 /* Existing styles remain the same */
 #settings-icon {
@@ -457,25 +475,34 @@ input:checked + .slider:before {
 
 .search-bar{
   position: absolute;
-  top: 3em;
+  top: 2vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
+.search-bar h1{
+  font-size: 0.8em;
+  transform: translateY(5px);
+  font-weight: normal;
+}
+
 .search-bar input{
-  border-radius: 20px;
+  border-radius: 50px;
   padding: 10px 30px ;
+  font-size: 25px;
   border:1px solid var(--color-secondry);
   transition: 0.4s;
   text-align: center;
+  width: 300px;
 }
 .search-bar input:focus{
   outline: none;
-  transition: 0.4s;
   /* scale: 1.1; */
   padding: 10px 80px;
+  width: 600px;
+  transition: 0.4s;
 }
 .search-bar input::selection{
   background-color: var(--color-secondry);
@@ -486,7 +513,7 @@ input:checked + .slider:before {
 /* ------------categories */
 .categories-section{
   position: absolute;
-  top: 13em;
+  top: 20vh;
   /* background-color: red; */
   width: 100%;
 }
@@ -504,22 +531,34 @@ input:checked + .slider:before {
   justify-content: center;
   margin-bottom: 20px;
   border-radius: 20px;
+  position: relative; /* Add this to make the indicator work */
+
 }
 .categories button {
   padding: 10px 20px;
   cursor: pointer;
   border: none;
-  background-color: lightgray;
+  background-color: transparent;
+  position: relative; /* Required for indicator positioning */
+  z-index: 1; /* Ensure buttons are above the indicator */
 }
 .categories button.active {
-  background-color: steelblue;
-  color: white;
+  height: 100%;
+  background-color: var(--color-neutral-400);
+  border-radius: 20px;
+  color: black;
 }
-.categories button:nth-child(1){
-  border-radius: 20px 0 0 20px;
-}
-.categories button:nth-child(5){
-  border-radius: 0 20px 20px 0;
+.websites-container{
+  /* background-color: pink; */
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  height: 35vh;
+  width: 90%;
+  margin-left: 5%;
+  /* overflow-y: auto; */
 
 }
 .websites {
@@ -530,12 +569,175 @@ input:checked + .slider:before {
   display: block;
 }
 .website-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  justify-content: center;
+  height: 3.5em;
+  width: 200px;
+  background-color: #9e887c40;
+  backdrop-filter: blur(10px);
+  margin: 5px 20px;
+  border-radius: 20px;
+  transition: 0.3s;
+  padding-left: 10px
 }
 .website-item img {
-  width: 32px;
-  height: 32px;
+  /* background-color: red; */
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
 }
+
+.website-info{
+  /* background-color: green; */
+  height: 60px;
+  width: 140px;
+  overflow: hidden;
+  gap: 0;
+  padding: 10px 0 0 15px;
+  margin: 0;
+  display: flex;
+  align-items: start;
+  /* justify-content: center; */
+  flex-direction: column;
+}
+.website-info h4{
+  transform: translateY(-15px);
+  font-weight: normal;
+  /* font-size: 0.7em; */
+  font-size:10px;
+}
+.website-info a{
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.website-item {
+  opacity: 0;
+  transform: translateY(50px); /* Start 50px below */
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.website-item:hover{
+  scale: 1.2;
+  transition: 0.3s;
+}
+
+
+
+
+
+/* ------------categories */
+
+/* Hover Indicator Styles */
+.hover-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--color-neutral-400);
+  border-radius: 20px;
+  z-index: 0; /* Place behind the buttons */
+  transition: width 0.3s ease, transform 0.3s ease;
+  pointer-events: none; /* Allows clicks to pass through */
+}
+
+/* Initial state of the indicator (hidden) */
+.hover-indicator {
+  width: 0;
+  transform: translateX(0);
+}
+
+/* Style when no button is active, but mouse is hovering */
+.categories:hover .hover-indicator {
+  width: 100px; /* Adjust as needed */
+}
+
+
+
+
+
+
+
+
+
+
+/* ---------clock */
+
+#clock {
+  position: absolute;
+  top: -5vh;
+  /* background-color: rgba(255, 0, 0, 0.138); */
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  width: 100%;
+  text-align: center;
+  color: var(--color-secondry);
+  padding: 0;
+  margin: 0;
+  /* text-shadow: 0 0 20px rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0); */
+}
+
+.time {
+  position: relative;
+  font-size: 10em;
+  letter-spacing: 0.05em;
+  /* background-color: pink;   */
+}
+
+.date {
+  transform: translateY(170px);
+  position: relative;
+  /* background-color: burlywood; */
+  font-size: 24px;
+  letter-spacing: 0.1em;
+}
+
+/* .text {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  padding-top: 10px;
+} */
+
+  .search-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .search-option {
+            padding: 8px 8px;
+            background-color: transparent;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10000;
+        }
+
+        .search-option img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .search-option.active {
+            background-color:var(--color-secondry);
+        }

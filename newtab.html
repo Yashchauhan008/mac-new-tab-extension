@@ -9,23 +9,50 @@
 <body>
 
   <!-- search bar -->
-    <div class="search-bar">
+    <!-- <div class="search-bar">
         <h1>Welcome To Your Kingdom</h1>
         <input type="text" placeholder="Search anything ..." id="search-input">
+    </div> -->
+
+
+    <div class="search-bar">
+      <!-- <h1>Welcome To Your Kingdom</h1> -->
+    
+      <!-- Search Input -->
+      
+      <!-- Search Engine Toggle -->
+      <div class="search-options">
+        <button class="search-option" data-engine="brave"><img src="/Images/brave.png"/></button>
+        <button class="search-option" data-engine="bing"><img src="/Images/bing.png" /></button>
+        <button class="search-option active" data-engine="google"><img src="/Images/chrome.png"/></button>
+        <button class="search-option" data-engine="youtube"><img src="/Images/youtube.png"/></button>
+        <button class="search-option" data-engine="duckduckgo"><img src="/Images/ddgo.png"/></button>
+      </div>
+      <input type="text" placeholder="Search anything ..." id="search-input">
     </div>
+    
 
   <!-- Category Buttons -->
    <div class="categories-section">
-    <h2>Tools</h2>
-     <div class="categories">
+    <!-- <h2>Tools</h2> -->
+    <div class="categories">
+      <div class="hover-indicator"></div>     
+       <button id="btn-z">clock</button>
        <button id="btn-a">Image</button>
        <button id="btn-b">Video</button>
        <button id="btn-c">Audio</button>
-       <button id="btn-d">CSS</button>
+       <button id="btn-d">Design </button>
        <button id="btn-e">Extras</button>
       </div>
+
+      <div id="clock">
+        <p class="date" id="date"></p>
+        <p class="time" id="time"></p>
+        <!-- <p class="text">DIGITAL CLOCK with JavaScript</p> -->
+    </div>
+
       <!-- Website List Container -->
-      <div id="websites-container"></div>
+      <div id="websites-container" class="websites-container"></div>
     </div>
 
 
