@@ -854,21 +854,19 @@ input:checked + .slider:before {
           width: 2%;
           transform: rotate(0);
           transform-origin: 50% 100%;
-          transition: 05s;
-
         }
         
         .hour {
           height: 40%;
           background: #663300;
-          transition: 05s;
+          transition: 1s ease-out;
 
         }
         
         .minute {
           height: 48%;
           background: #804000;
-          transition: 05s;
+          transition: 1s ease-out;
 
         }
         
@@ -877,7 +875,6 @@ input:checked + .slider:before {
           background: #ff9933;
           width: 1%;
           left: 49.5%;
-          transition: 05s;
 
         }
         

@@ -607,6 +607,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+setTime();
+
+setInterval(function() {
+  setTime();
+}, 1000);
+
+function setTime() {
+	var d = new Date();
+	var h = d.getHours();
+	var m = d.getMinutes();
+	var s = d.getSeconds();
+	
+	var hour 	 = 360 * (h / 12);
+	var minute = 360 * (m / 60);
+	var second = 360 * (s / 60);
+	
+	document.getElementById("hour").style.transform = 'rotate(' + hour + 'deg)';
+	document.getElementById("minute").style.transform = 'rotate(' + minute + 'deg)';
+	document.getElementById("second").style.transform = 'rotate(' + second + 'deg)';
+}
+
+
 
 // function updateTime() {
 //   let cd = new Date();
@@ -633,67 +655,3 @@ document.addEventListener('DOMContentLoaded', () => {
 // updateTime(); // Initial call to display time immediately
 
 
-
-
-function animateClockHands(targetHour, targetMinute, targetSecond) {
-    let currentHour = 0;
-    let currentMinute = 0;
-    let currentSecond = 0;
-    
-    // Reset hands to 12 o'clock
-    document.getElementById("hour").style.transform = 'rotate(0deg)';
-    document.getElementById("minute").style.transform = 'rotate(0deg)';
-    document.getElementById("second").style.transform = 'rotate(0deg)';
-    
-    const animationDuration = 2000; // 2 seconds
-    const startTime = performance.now();
-    
-    function updateHands(currentTime) {
-        const elapsedTime = currentTime - startTime;
-        const progress = Math.min(elapsedTime / animationDuration, 1);
-        
-        // Easing function for smooth animation
-        const easeProgress = 1 - Math.pow(1 - progress, 3);
-        
-        currentHour = easeProgress * targetHour;
-        currentMinute = easeProgress * targetMinute;
-        currentSecond = easeProgress * targetSecond;
-        
-        document.getElementById("hour").style.transform = 'rotate(' + currentHour + 'deg)';
-        document.getElementById("minute").style.transform = 'rotate(' + currentMinute + 'deg)';
-        document.getElementById("second").style.transform = 'rotate(' + currentSecond + 'deg)';
-        
-        if (progress < 1) {
-            requestAnimationFrame(updateHands);
-        }
-    }
-    
-    requestAnimationFrame(updateHands);
-}
-
-function setTime(animate = false) {
-    const d = new Date();
-    const h = d.getHours();
-    const m = d.getMinutes();
-    const s = d.getSeconds();
-    
-    const hour = 360 * (h / 12);
-    const minute = 360 * (m / 60);
-    const second = 360 * (s / 60);
-    
-    if (animate) {
-        animateClockHands(hour, minute, second);
-    } else {
-        document.getElementById("hour").style.transform = 'rotate(' + hour + 'deg)';
-        document.getElementById("minute").style.transform = 'rotate(' + minute + 'deg)';
-        document.getElementById("second").style.transform = 'rotate(' + second + 'deg)';
-    }
-}
-
-// Initial animation when page loads
-setTime(true);
-
-// Regular updates
-setInterval(function() {
-    setTime(false);
-}, 1000);
