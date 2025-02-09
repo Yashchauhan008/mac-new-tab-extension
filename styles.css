@@ -512,10 +512,12 @@ input:checked + .slider:before {
 
 /* ------------categories */
 .categories-section{
-  position: absolute;
-  top: 20vh;
-  /* background-color: red; */
-  width: 100%;
+  position: relative;
+  /* background-color: rgb(59, 49, 49); */
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .categories-section h2{
   text-align: center;
@@ -531,8 +533,8 @@ input:checked + .slider:before {
   justify-content: center;
   margin-bottom: 20px;
   border-radius: 20px;
-  position: relative; /* Add this to make the indicator work */
-
+  position: absolute; 
+  top: 0;  
 }
 .categories button {
   padding: 10px 20px;
@@ -556,8 +558,9 @@ input:checked + .slider:before {
   flex-wrap: wrap;
   flex-direction: row;
   height: 35vh;
-  width: 90%;
-  margin-left: 5%;
+  width: 50vw;
+  /* width: 90%; */
+  /* margin-left: 5%; */
   /* overflow-y: auto; */
 
 }
@@ -665,7 +668,36 @@ input:checked + .slider:before {
 }
 
 
+.search-options {
+          display: flex;
+          gap: 10px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+      }
 
+      .search-option {
+          padding: 8px 8px;
+          background-color: transparent;
+          color: white;
+          border-radius: 50px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: 0.3s;
+          border: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          z-index: 10000;
+      }
+
+      .search-option img {
+          width: 20px;
+          height: 20px;
+      }
+
+      .search-option.active {
+          background-color:var(--color-secondry);
+      }
 
 
 
@@ -674,70 +706,178 @@ input:checked + .slider:before {
 
 
 /* ---------clock */
-
+/* 
 #clock {
   position: absolute;
   top: -5vh;
-  /* background-color: rgba(255, 0, 0, 0.138); */
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
   width: 100%;
   text-align: center;
   color: var(--color-secondry);
   padding: 0;
   margin: 0;
-  /* text-shadow: 0 0 20px rgba(10, 175, 230, 1), 0 0 20px rgba(10, 175, 230, 0); */
 }
 
 .time {
   position: relative;
   font-size: 10em;
   letter-spacing: 0.05em;
-  /* background-color: pink;   */
 }
 
 .date {
   transform: translateY(170px);
   position: relative;
-  /* background-color: burlywood; */
   font-size: 24px;
   letter-spacing: 0.1em;
 }
 
-/* .text {
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  padding-top: 10px;
-} */
+        } */
+         .main{
+          /* background-color: green; */
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          padding: 0 150px;
 
-  .search-options {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+         }
 
-        .search-option {
-            padding: 8px 8px;
-            background-color: transparent;
-            color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 10000;
+      /* .clock-pos{
+        background-color: red;
+        display: flex;
+        align-items: center;
+        justify-content: start;  
+        scale: 0.9;
+        padding: 0 150px;
+        width: 30vw;
+      } */
+        #clock {
+          background: #F68657;
+          width: 50vmin;
+          height: 50vmin;
+          border-radius: 50%;
+          position: relative;
         }
+        
+        #clock:before {
+          content: '';
+          position: absolute;
+          margin: auto;
+          width: 3%;
+          height: 12%;
+          background: green;
+          left: 0;
+          right: 0;
+          top: -10%;
+          z-index: -1;
+          transform: rotate(10deg);
+        }
+        
+        #clock:after {
+          content: '';
+          position: absolute;
+          margin: auto;
+          width: 8%;
+          height: 16%;
+          background: green;
+          left: 0;
+          right: 15%;
+          top: -10%;
+          z-index: -1;
+          transform: rotate(-40deg);
+          border-radius: 100% 30% 50% 0;
+        }
+        
+        .middle1 {
+          position: absolute;
+          margin: auto;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 5%;
+          height: 5%;
+          background: #cc6600;
+          border-radius: 50%;
+          z-index: 1;
+        }
+        
+        .middle {
+          position: absolute;
+          margin: auto;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 5%;
+          height: 5%;
+          background: #b35900;
+          border-radius: 50%;
+        }
+        
+        .middle:before {
+          content: '';
+          position: absolute;
+          background: #F47D48;
+          width: 80%;
+          height: 80%;
+          border-radius: 50%;
+          left: 400%;
+          top: 150%;
+          box-shadow: -20vmin -10vmin 0 0 #F47D48,
+            -10vmin -24vmin 0 0 #F47D48,
+            4vmin 10vmin 0 0 #F47D48,
+            -20vmin 14vmin 0 0 #F47D48,
+            -30vmin 4vmin 0 0 #F47D48;
+        }
+        
+        .middle:after {
+          content: '';
+          position: absolute;
+          background: #F47D48;
+          width: 90%;
+          height: 90%;
+          border-radius: 50%;
+          left: 400%;
+          top: 150%;
+          box-shadow: -26vmin -16vmin 0 0 #F47D48,
+            6vmin -14vmin 0 0 #F47D48,
+            -10vmin 8vmin 0 0 #F47D48,
+            -4vmin 18vmin 0 0 #F47D48,
+            12vmin -5vmin 0 0 #F47D48;
+        }
+        
+        .hour, .minute, .second {
+          position: absolute;
+          margin: auto;
+          left: 49%;
+          bottom: 50%;
+          width: 2%;
+          transform: rotate(0);
+          transform-origin: 50% 100%;
+          transition: 05s;
 
-        .search-option img {
-            width: 20px;
-            height: 20px;
         }
+        
+        .hour {
+          height: 40%;
+          background: #663300;
+          transition: 05s;
 
-        .search-option.active {
-            background-color:var(--color-secondry);
         }
+        
+        .minute {
+          height: 48%;
+          background: #804000;
+          transition: 05s;
+
+        }
+        
+        .second {
+          height: 48%;
+          background: #ff9933;
+          width: 1%;
+          left: 49.5%;
+          transition: 05s;
+
+        }
+        

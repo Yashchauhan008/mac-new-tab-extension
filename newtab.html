@@ -1,105 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yash's New Tab</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-  <!-- search bar -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- search bar -->
     <!-- <div class="search-bar">
         <h1>Welcome To Your Kingdom</h1>
         <input type="text" placeholder="Search anything ..." id="search-input">
     </div> -->
 
-
     <div class="search-bar">
       <!-- <h1>Welcome To Your Kingdom</h1> -->
-    
+
       <!-- Search Input -->
-      
+
       <!-- Search Engine Toggle -->
       <div class="search-options">
-        <button class="search-option" data-engine="brave"><img src="/Images/brave.png"/></button>
-        <button class="search-option" data-engine="bing"><img src="/Images/bing.png" /></button>
-        <button class="search-option active" data-engine="google"><img src="/Images/chrome.png"/></button>
-        <button class="search-option" data-engine="youtube"><img src="/Images/youtube.png"/></button>
-        <button class="search-option" data-engine="duckduckgo"><img src="/Images/ddgo.png"/></button>
+        <button class="search-option" data-engine="brave">
+          <img src="/Images/brave.png" />
+        </button>
+        <button class="search-option" data-engine="bing">
+          <img src="/Images/bing.png" />
+        </button>
+        <button class="search-option active" data-engine="google">
+          <img src="/Images/chrome.png" />
+        </button>
+        <button class="search-option" data-engine="youtube">
+          <img src="/Images/youtube.png" />
+        </button>
+        <button class="search-option" data-engine="duckduckgo">
+          <img src="/Images/ddgo.png" />
+        </button>
       </div>
-      <input type="text" placeholder="Search anything ..." id="search-input">
+      <input type="text" placeholder="Search anything ..." id="search-input" />
     </div>
-    
 
-  <!-- Category Buttons -->
-   <div class="categories-section">
-    <!-- <h2>Tools</h2> -->
-    <div class="categories">
-      <div class="hover-indicator"></div>     
-       <button id="btn-z">clock</button>
-       <button id="btn-a">Image</button>
-       <button id="btn-b">Video</button>
-       <button id="btn-c">Audio</button>
-       <button id="btn-d">Design </button>
-       <button id="btn-e">Extras</button>
+    <div class="main">
+      <div class="clock-pos">
+        <div id="clock">
+          <div class="middle"></div>
+          <div class="middle1"></div>
+          <div id="hour" class="hour"></div>
+          <div id="minute" class="minute"></div>
+          <div id="second" class="second"></div>
+        </div>
       </div>
 
-      <div id="clock">
-        <p class="date" id="date"></p>
-        <p class="time" id="time"></p>
-        <!-- <p class="text">DIGITAL CLOCK with JavaScript</p> -->
-    </div>
+      <div class="categories-section">
+        <div class="categories">
+          <div class="hover-indicator"></div>
+          <!-- <button id="btn-z">clock</button> -->
+          <button id="btn-a">Image</button>
+          <button id="btn-b">Video</button>
+          <button id="btn-c">Audio</button>
+          <button id="btn-d">Design</button>
+          <button id="btn-e">Extras</button>
+        </div>
 
-      <!-- Website List Container -->
-      <div id="websites-container" class="websites-container"></div>
+        <div id="websites-container" class="websites-container"></div>
+      </div>
     </div>
-
 
     <!-- Appple Dock -->
     <section class="cloneable">
-        <div class="nav-wrap">
-          <nav class="nav-bar">
-            <ul class="nav-list">
-              <!-- Nav items will be dynamically populated by JavaScript -->
-            </ul>
-          </nav>
-        </div>
+      <div class="nav-wrap">
+        <nav class="nav-bar">
+          <ul class="nav-list">
+            <!-- Nav items will be dynamically populated by JavaScript -->
+          </ul>
+        </nav>
+      </div>
     </section>
 
     <!-- Settings Icon -->
     <div id="settings-icon">⚙️</div>
     <div id="side-panel" class="side-panel">
-        <div class="side-panel-header">
-            <h2>Settings</h2>
-            <button id="close-panel">✕</button>
+      <div class="side-panel-header">
+        <h2>Settings</h2>
+        <button id="close-panel">✕</button>
+      </div>
+      <div class="side-panel-content">
+        <!-- Dark Mode Toggle -->
+        <div class="settings-section" id="dark-mode-section">
+          <h3>Dark Mode</h3>
+          <label class="switch">
+            <input type="checkbox" id="dark-mode-toggle" />
+            <span class="slider round"></span>
+          </label>
         </div>
-        <div class="side-panel-content">
-          <!-- Dark Mode Toggle -->
-          <div class="settings-section" id="dark-mode-section">
-              <h3>Dark Mode</h3>
-              <label class="switch">
-                  <input type="checkbox" id="dark-mode-toggle">
-                  <span class="slider round"></span>
-              </label>
+        <!-- Shortcuts Section -->
+        <div class="settings-section" id="shortcuts-section">
+          <h3>Manage Shortcuts</h3>
+          <div class="add-shortcut-form">
+            <input type="text" id="shortcut-name" placeholder="Shortcut Name" />
+            <input type="url" id="shortcut-url" placeholder="Shortcut URL" />
+            <button id="add-shortcut-btn">Add Shortcut</button>
           </div>
-            <!-- Shortcuts Section -->
-            <div class="settings-section" id="shortcuts-section">
-                <h3>Manage Shortcuts</h3>
-                <div class="add-shortcut-form">
-                    <input type="text" id="shortcut-name" placeholder="Shortcut Name">
-                    <input type="url" id="shortcut-url" placeholder="Shortcut URL">
-                    <button id="add-shortcut-btn">Add Shortcut</button>
-                </div>
-                <ul id="shortcut-list">
-                  <!-- Dynamically populated shortcuts -->
-                </ul>
-              </div>
-            
+          <ul id="shortcut-list">
+            <!-- Dynamically populated shortcuts -->
+          </ul>
         </div>
+      </div>
     </div>
-    
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

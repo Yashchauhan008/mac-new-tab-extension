@@ -423,15 +423,15 @@ searchInput.addEventListener('keypress', (e) => {
  const websites =[
     { icon: "https://iconbuddy.com/favicon.ico", url: "https://iconbuddy.com/", description: "Icons", name: "iconbuddy", category: "a" },
     { icon: "https://savee.it/favicon.ico", url: "https://savee.it/", description: "Stock Images", name: "savee", category: "a" },
-    { icon: "https://www.flaticon.com/favicon.ico", url: "https://www.flaticon.com/", description: "Icons", name: "flaticon", category: "a" },
-    { icon: "https://shapefest.com/favicon.ico", url: "https://shapefest.com/", description: "3D Shapes", name: "shapefest", category: "a" },
-    { icon: "https://futicons.com/favicon.ico", url: "https://futicons.com/", description: "Icons", name: "futicons", category: "a" },
-    { icon: "https://iconscout.com/favicon.ico", url: "https://iconscout.com/", description: "Icons", name: "iconscout", category: "a" },
-    { icon: "https://boxicons.com/favicon.ico", url: "https://boxicons.com/", description: "Icons", name: "boxicons", category: "a" },
-    { icon: "https://looka.com/favicon.ico", url: "https://looka.com/", description: "Logo Maker", name: "looka", category: "a" },
-    { icon: "https://leonardo.ai/favicon.ico", url: "https://leonardo.ai", description: "AI Image Generator", name: "leonardo", category: "a" },
-    { icon: "https://stablediffusionweb.com/favicon.ico", url: "https://stablediffusionweb.com", description: "AI Image Generator", name: "stablediffusionweb", category: "a" },
-    { icon: "https://firefly.adobe.com/favicon.ico", url: "https://firefly.adobe.com/inspire", description: "Adobe AI Image Generator", name: "firefly", category: "a" },
+    // { icon: "https://www.flaticon.com/favicon.ico", url: "https://www.flaticon.com/", description: "Icons", name: "flaticon", category: "a" },
+    // { icon: "https://shapefest.com/favicon.ico", url: "https://shapefest.com/", description: "3D Shapes", name: "shapefest", category: "a" },
+    // { icon: "https://futicons.com/favicon.ico", url: "https://futicons.com/", description: "Icons", name: "futicons", category: "a" },
+    // { icon: "https://iconscout.com/favicon.ico", url: "https://iconscout.com/", description: "Icons", name: "iconscout", category: "a" },
+    // { icon: "https://boxicons.com/favicon.ico", url: "https://boxicons.com/", description: "Icons", name: "boxicons", category: "a" },
+    // { icon: "https://looka.com/favicon.ico", url: "https://looka.com/", description: "Logo Maker", name: "looka", category: "a" },
+    // { icon: "https://leonardo.ai/favicon.ico", url: "https://leonardo.ai", description: "AI Image Generator", name: "leonardo", category: "a" },
+    // { icon: "https://stablediffusionweb.com/favicon.ico", url: "https://stablediffusionweb.com", description: "AI Image Generator", name: "stablediffusionweb", category: "a" },
+    // { icon: "https://firefly.adobe.com/favicon.ico", url: "https://firefly.adobe.com/inspire", description: "Adobe AI Image Generator", name: "firefly", category: "a" },
     { icon: "https://ideogram.ai/favicon.ico", url: "https://ideogram.ai/", description: "AI Image Generator", name: "ideogram", category: "a" },
     { icon: "https://getimg.ai/favicon.ico", url: "https://getimg.ai/", description: "AI Image Generator", name: "getimg", category: "a" },
     { icon: "https://unsplash.com/favicon.ico", url: "https://unsplash.com/", description: "Stock Images", name: "unsplash", category: "a" },
@@ -502,11 +502,10 @@ searchInput.addEventListener('keypress', (e) => {
 
 document.addEventListener("DOMContentLoaded", function () {
   // Set default category (e.g., "a")
-  const defaultCategory = "z";
+  const defaultCategory = "a";
   showCategory(defaultCategory);
 
   // Add event listeners for buttons
-  document.getElementById("btn-z").addEventListener("click", () => showCategory("z"));
   document.getElementById("btn-a").addEventListener("click", () => showCategory("a"));
   document.getElementById("btn-b").addEventListener("click", () => showCategory("b"));
   document.getElementById("btn-c").addEventListener("click", () => showCategory("c"));
@@ -531,7 +530,7 @@ function showCategory(category) {
   const filteredWebsites = websites.filter(website => website.category === category);
 
   if (filteredWebsites.length > 0) {
-    clock.style.display="none"
+    // clock.style.display="none"
     filteredWebsites.forEach((site, index) => {
       const siteElement = document.createElement("div");
       siteElement.classList.add("website-item", "fade-in-up"); // Apply animation class
@@ -550,8 +549,8 @@ function showCategory(category) {
       container.appendChild(siteElement);
     });
   } else {
-    // container.innerHTML = "<p>No websites available for this category.</p>";
-    clock.style.display="block"
+    container.innerHTML = "<p>No websites available for this category.</p>";
+    // clock.style.display="block"
   }
 }
 
@@ -609,27 +608,92 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-function updateTime() {
-  let cd = new Date();
-  let week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+// function updateTime() {
+//   let cd = new Date();
+//   let week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-  let hours = cd.getHours();
-  let ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12; // Convert 0 to 12
+//   let hours = cd.getHours();
+//   let ampm = hours >= 12 ? "PM" : "AM";
+//   hours = hours % 12 || 12; // Convert 0 to 12
 
-  let timeString = zeroPadding(hours, 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
-  let dateString = zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth() + 1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()];
+//   let timeString = zeroPadding(hours, 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
+//   let dateString = zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth() + 1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()];
   
-  document.getElementById("time").textContent = timeString;
-  // document.getElementById("ampm").textContent = ampm;
-  document.getElementById("date").textContent = dateString;
+//   document.getElementById("time").textContent = timeString;
+//   // document.getElementById("ampm").textContent = ampm;
+//   document.getElementById("date").textContent = dateString;
+// }
+
+// function zeroPadding(num, digit) {
+//   return num.toString().padStart(digit, '0');
+// }
+
+// // Update time every second
+// setInterval(updateTime, 1000);
+// updateTime(); // Initial call to display time immediately
+
+
+
+
+function animateClockHands(targetHour, targetMinute, targetSecond) {
+    let currentHour = 0;
+    let currentMinute = 0;
+    let currentSecond = 0;
+    
+    // Reset hands to 12 o'clock
+    document.getElementById("hour").style.transform = 'rotate(0deg)';
+    document.getElementById("minute").style.transform = 'rotate(0deg)';
+    document.getElementById("second").style.transform = 'rotate(0deg)';
+    
+    const animationDuration = 2000; // 2 seconds
+    const startTime = performance.now();
+    
+    function updateHands(currentTime) {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / animationDuration, 1);
+        
+        // Easing function for smooth animation
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        
+        currentHour = easeProgress * targetHour;
+        currentMinute = easeProgress * targetMinute;
+        currentSecond = easeProgress * targetSecond;
+        
+        document.getElementById("hour").style.transform = 'rotate(' + currentHour + 'deg)';
+        document.getElementById("minute").style.transform = 'rotate(' + currentMinute + 'deg)';
+        document.getElementById("second").style.transform = 'rotate(' + currentSecond + 'deg)';
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateHands);
+        }
+    }
+    
+    requestAnimationFrame(updateHands);
 }
 
-function zeroPadding(num, digit) {
-  return num.toString().padStart(digit, '0');
+function setTime(animate = false) {
+    const d = new Date();
+    const h = d.getHours();
+    const m = d.getMinutes();
+    const s = d.getSeconds();
+    
+    const hour = 360 * (h / 12);
+    const minute = 360 * (m / 60);
+    const second = 360 * (s / 60);
+    
+    if (animate) {
+        animateClockHands(hour, minute, second);
+    } else {
+        document.getElementById("hour").style.transform = 'rotate(' + hour + 'deg)';
+        document.getElementById("minute").style.transform = 'rotate(' + minute + 'deg)';
+        document.getElementById("second").style.transform = 'rotate(' + second + 'deg)';
+    }
 }
 
-// Update time every second
-setInterval(updateTime, 1000);
-updateTime(); // Initial call to display time immediately
+// Initial animation when page loads
+setTime(true);
 
+// Regular updates
+setInterval(function() {
+    setTime(false);
+}, 1000);
