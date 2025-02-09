@@ -240,6 +240,15 @@ body {
 
   /* Existing styles remain the same */
 
+/* Shortcut List Styles */
+.default-badge {
+  background-color: #e0e0e0;
+  color: #666;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
 /* Modal Styles */
 .modal {
   display: none;
@@ -497,7 +506,7 @@ input:checked + .slider:before {
   text-align: center;
   width: 300px;
 }
-.search-bar input:focus{
+.search-bar input:hover{
   outline: none;
   /* scale: 1.1; */
   padding: 10px 80px;
@@ -696,6 +705,9 @@ input:checked + .slider:before {
       }
 
       .search-option.active {
+          background-color:var(--color-secondry);
+      }
+      .search-option:hover {
           background-color:var(--color-secondry);
       }
 

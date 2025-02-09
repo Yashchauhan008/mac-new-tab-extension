@@ -1,4 +1,25 @@
+// Default apps configuration
+const defaultApps = [
+    { name: 'YouTube', url: 'https://youtube.com', icon: '/Images/youtube1.png', default: true },
+    { name: 'Spotify', url: 'https://open.spotify.com', icon: '/Images/spotify.png', default: true },
+    { name: 'Chat GPT', url: 'http://chat.openai.com/', icon: '/Images/chatgpt.png', default: true },
+    { name: 'whatsapp', url: 'https://web.whatsapp.com/', icon: '/Images/whatsapp.png', default: true },
+    { name: 'Github', url: 'http://github.com/', icon: '/Images/github.png', default: true },
+    { name: 'Figma', url: 'https://figma.com', icon: '/Images/figma.png', default: true },
+    { name: 'Quicklabs', url: 'https://quicklabs.fun/', icon: '/Images/quicklabs.png', default: true },
+];
+
+// Initialize apps in localStorage if not present
+function initializeApps() {
+  const savedApps = localStorage.getItem('navApps');
+  if (!savedApps) {
+    localStorage.setItem('navApps', JSON.stringify(defaultApps));
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize apps when the page loads
+  initializeApps();
   const navList = document.querySelector('.nav-list');
   const searchInput = document.querySelector('input[type="text"]');
   const settingsIcon = document.getElementById('settings-icon');
@@ -8,19 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const shortcutList = document.getElementById('shortcut-list');
   const shortcutNameInput = document.getElementById('shortcut-name');
   const shortcutUrlInput = document.getElementById('shortcut-url');
-  const clock = document.getElementById("clock");
-// clock.style.display="none" 
-
-  // Default apps if no saved apps
-  const defaultApps = [
-    { name: 'Notion', url: 'https://www.notion.so', icon: 'notion.png' },
-    { name: 'VS Code', url: 'https://vscode.dev', icon: 'vs-code.png' },
-    { name: 'Slack', url: 'https://slack.com', icon: 'slack.png' },
-    { name: 'Spotify', url: 'https://open.spotify.com', icon: 'spotify.png' },
-    { name: 'Figma', url: 'https://www.figma.com', icon: 'figma.png' }
-  ];
-
- 
+  const clock = document.getElementById("clock"); 
 
   // Add this code right before your DOMContentLoaded event listener
 
@@ -147,30 +156,47 @@ window.addEventListener('offline', () => {
   }
 
 async function loadApps() {
-    const savedApps = JSON.parse(localStorage.getItem('navApps')) || defaultApps;
-    navList.innerHTML = ''; // Clear existing items
+    // Clear the navigation list
+    navList.innerHTML = '';
+    
+    // Get apps from localStorage
+    let allApps = [];
+    try {
+        allApps = JSON.parse(localStorage.getItem('navApps')) || [];
+        if (allApps.length === 0) {
+            // If no apps in localStorage, reinitialize with default apps
+            allApps = [...defaultApps];
+            localStorage.setItem('navApps', JSON.stringify(allApps));
+        }
+    } catch (error) {
+        console.error('Error loading saved apps:', error);
+        allApps = [...defaultApps];
+        localStorage.setItem('navApps', JSON.stringify(allApps));
+    }
 
-    // Fetch favicons for all apps
-    const appsWithFavicons = await Promise.all(savedApps.map(async (app) => {
-      // If no icon or using default icon, fetch new favicon
-      if (!app.icon || app.icon.includes('png')) {
+    // Only fetch favicons for non-default apps
+    const processedApps = await Promise.all(allApps.map(async (app) => {
+      if (!app.default) {
+        // For non-default apps, fetch favicon
         const favicon = await getFavicon(app.url);
         return { ...app, icon: favicon };
       }
+      // For default apps, keep the stored image
       return app;
     }));
 
-    // Save updated apps with favicons
-    localStorage.setItem('navApps', JSON.stringify(appsWithFavicons));
-// Create nav items
-appsWithFavicons.forEach((app) => {
-  const listItem = createNavItem(app);
-  navList.appendChild(listItem);
-});
+    // Save updated apps
+    localStorage.setItem('navApps', JSON.stringify(processedApps));
 
-// Populate side panel shortcut list
-populateShortcutList(appsWithFavicons);
-attachNavItemListeners();
+    // Create nav items
+    processedApps.forEach((app) => {
+      const listItem = createNavItem(app);
+      navList.appendChild(listItem);
+    });
+
+    // Populate side panel shortcut list
+    populateShortcutList(processedApps);
+    attachNavItemListeners();
 }
 
   // Create nav item dynamically
@@ -191,6 +217,7 @@ attachNavItemListeners();
   // Populate side panel shortcut list
   function populateShortcutList(apps) {
     shortcutList.innerHTML = '';
+    
     apps.forEach((app, index) => {
       const li = document.createElement('li');
       li.innerHTML = `
@@ -223,7 +250,8 @@ attachNavItemListeners();
       savedApps.push({
         name,
         url,
-        icon: favicon
+        icon: favicon,
+        default: false  // New shortcuts are not default
       });
       localStorage.setItem('navApps', JSON.stringify(savedApps));
       loadApps();
@@ -234,9 +262,12 @@ attachNavItemListeners();
 
   // Edit shortcut with favicon update
   async function editShortcut(e) {
-    const index = e.target.dataset.index;
+    const displayIndex = parseInt(e.target.dataset.index);
     const savedApps = JSON.parse(localStorage.getItem('navApps')) || defaultApps;
-    const app = savedApps[index];
+    // Find the actual index in the full apps array
+    const nonDefaultApps = savedApps.filter(app => app.default !== true);
+    const app = nonDefaultApps[displayIndex];
+    const actualIndex = savedApps.findIndex(a => a.name === app.name && a.url === app.url);
 
     shortcutNameInput.value = app.name;
     shortcutUrlInput.value = app.url;
@@ -245,10 +276,11 @@ attachNavItemListeners();
     addShortcutBtn.textContent = 'Update Shortcut';
     addShortcutBtn.onclick = async () => {
       const favicon = await getFavicon(shortcutUrlInput.value);
-      savedApps[index] = {
+      savedApps[actualIndex] = {
         name: shortcutNameInput.value,
         url: shortcutUrlInput.value,
-        icon: favicon
+        icon: favicon,
+        default: false // Maintain non-default status
       };
       localStorage.setItem('navApps', JSON.stringify(savedApps));
       loadApps();
@@ -260,31 +292,18 @@ attachNavItemListeners();
   }
   // Delete shortcut
   function deleteShortcut(e) {
-    const index = e.target.dataset.index;
+    const index = parseInt(e.target.dataset.index);
     const savedApps = JSON.parse(localStorage.getItem('navApps')) || defaultApps;
+    
+    // Remove the app at the specified index
     savedApps.splice(index, 1);
+    
+    // Save the updated apps list
     localStorage.setItem('navApps', JSON.stringify(savedApps));
     loadApps();
   }
 
-  // Add shortcut
-  function addShortcut() {
-    const name = shortcutNameInput.value;
-    const url = shortcutUrlInput.value;
-    
-    if (name && url) {
-      const savedApps = JSON.parse(localStorage.getItem('navApps')) || defaultApps;
-      savedApps.push({
-        name,
-        url,
-        icon: `favicon_${name.toLowerCase().replace(/\s+/g, '')}.png`
-      });
-      localStorage.setItem('navApps', JSON.stringify(savedApps));
-      loadApps();
-      shortcutNameInput.value = '';
-      shortcutUrlInput.value = '';
-    }
-  }
+
 
   // Attach navigation and hover listeners
   function attachNavItemListeners() {
