@@ -463,6 +463,28 @@ searchInput.addEventListener('keypress', (e) => {
 
   // Initialize clock 3
   initializeClock3();
+
+  // Initialize clock 4
+  const clock4Interval = initializeClock4();
+
+  // Optional: Clean up interval on page unload
+  window.addEventListener('unload', () => {
+    clearInterval(clock4Interval);
+  });
+
+  // Initialize clock scaling
+  initializeClockScaling();
+
+  // Initialize default category
+  initializeDefaultCategory();
+
+  // Initialize clock 5
+  const clock5Interval = initializeClock5();
+
+  // Clean up interval when page unloads
+  window.addEventListener('unload', () => {
+    clearInterval(clock5Interval);
+  });
 });
 
 
@@ -971,11 +993,14 @@ document.addEventListener("DOMContentLoaded", function () {
 function showCategory(category) {
   console.log("Category Selected: ", category);
 
-  // Remove active class from all buttons
-  document.querySelectorAll(".categories button").forEach(btn => btn.classList.remove("active"));
-
-  // Add active class to clicked button
-  document.getElementById("btn-" + category).classList.add("active");
+  // Update both the main category buttons and settings category buttons
+  document.querySelectorAll(".categories button, #default-category-section .category-btn")
+      .forEach(btn => {
+          btn.classList.remove("active");
+          if (btn.id === `btn-${category}` || btn.dataset.category === category) {
+              btn.classList.add("active");
+          }
+      });
 
   // Get the container and clear previous content
   const container = document.getElementById("websites-container");
@@ -1431,4 +1456,264 @@ function initializeClock3() {
     // Start the clock
     updateClock(); // Initial render
     setInterval(updateClock, 1000);
+}
+
+
+
+
+
+const size = 86;
+const columns = Array.from(document.getElementsByClassName('column'));
+let d, c;
+const classList = ['visible', 'close', 'far', 'far', 'distant', 'distant'];
+const use24HourClock = true;
+
+function padClock(p, n) {
+  return p + ('0' + n).slice(-2);
+}
+
+function getClock() {
+  d = new Date();
+  return [
+    use24HourClock ? d.getHours() : (d.getHours() % 12 || 12),
+    d.getMinutes(),
+    d.getSeconds()
+  ]
+  .reduce(padClock, '');
+}
+
+function getClass(n, i2) {
+  return classList.find((className, classIndex) => Math.abs(n - i2) === classIndex) || '';
+}
+
+let loop = setInterval(() => {
+  c = getClock();
+  columns.forEach((ele, i) => {
+    let n = +c[i];
+    let offset = -n * size;
+    ele.style.transform = `translateY(calc(50vh + ${offset}px - ${size / 2}px))`;
+    Array.from(ele.children).forEach((ele2, i2) => {
+      ele2.className = 'num ' + getClass(n, i2);
+    });
+  });
+}, 200 + Math.E * 10);
+
+// Clock 4 initialization function
+function initializeClock4() {
+    const size = 86;
+    const columns = Array.from(document.getElementsByClassName('column'));
+    const classList = ['visible', 'close', 'far', 'far', 'distant', 'distant'];
+    const use24HourClock = true;
+
+    function padClock(p, n) {
+        return p + ('0' + n).slice(-2);
+    }
+
+    function getClock() {
+        const d = new Date();
+        return [
+            use24HourClock ? d.getHours() : (d.getHours() % 12 || 12),
+            d.getMinutes(),
+            d.getSeconds()
+        ].reduce(padClock, '');
+    }
+
+    function getClass(n, i2) {
+        return classList.find((className, classIndex) => Math.abs(n - i2) === classIndex) || '';
+    }
+
+    function updateClock() {
+        if (!columns.length) return; // Guard clause if elements don't exist
+
+        const c = getClock();
+        columns.forEach((ele, i) => {
+            let n = +c[i];
+            let offset = -n * size;
+            ele.style.transform = `translateY(calc(50vh + ${offset}px - ${size / 2}px))`;
+            Array.from(ele.children).forEach((ele2, i2) => {
+                ele2.className = 'num ' + getClass(n, i2);
+            });
+        });
+    }
+
+    // Initial update
+    updateClock();
+
+    // Set interval for updates
+    return setInterval(updateClock, 200 + Math.E * 10);
+}
+
+// Clock scaling functionality
+function initializeClockScaling() {
+    const scaleRange = document.getElementById('clock-scale');
+    const scaleValue = document.getElementById('scale-value');
+    const allClocks = document.querySelectorAll('.clocky');
+    
+    // Load saved scale from localStorage or default to 100
+    const savedScale = localStorage.getItem('clockScale') || 100;
+    
+    // Set initial scale
+    scaleRange.value = savedScale;
+    scaleValue.textContent = `${savedScale}%`;
+    applyClockScale(savedScale);
+
+    // Update scale when range input changes
+    scaleRange.addEventListener('input', (e) => {
+        const scale = e.target.value;
+        scaleValue.textContent = `${scale}%`;
+        applyClockScale(scale);
+        localStorage.setItem('clockScale', scale);
+    });
+
+    function applyClockScale(scale) {
+        allClocks.forEach(clock => {
+            // Convert scale percentage to decimal
+            const scaleDecimal = scale / 100;
+            
+            // Apply scale transform
+            clock.style.transform = `scale(${scaleDecimal})`;
+            
+            // Adjust container to maintain layout
+            clock.style.transformOrigin = 'center center';
+            
+            // Optional: Adjust margins to maintain spacing
+            const marginAdjustment = (100 - scale) / 2;
+            clock.style.margin = `${marginAdjustment}px 0`;
+        });
+    }
+}
+
+// Initialize default category functionality
+function initializeDefaultCategory() {
+    const categorySelect = document.getElementById('default-category-select');
+    
+    // Load saved default category from localStorage or use 'd' as fallback
+    const savedCategory = localStorage.getItem('defaultCategory') || 'd';
+    
+    // Set initial selected option
+    categorySelect.value = savedCategory;
+    
+    // Show the saved default category on page load
+    showCategory(savedCategory);
+
+    // Add change handler to select
+    categorySelect.addEventListener('change', (e) => {
+        const category = e.target.value;
+        
+        // Save to localStorage
+        localStorage.setItem('defaultCategory', category);
+        
+        // Show the selected category
+        showCategory(category);
+    });
+}
+
+
+
+const hourContainer = document.querySelector('.hour5');
+    for (let i = 0; i < 24; i++) {
+      const span = document.createElement('span');
+      span.textContent = i;
+      hourContainer.appendChild(span);
+    }
+
+    // Create minute spans
+    const minuteContainer = document.querySelector('.minute5');
+    for (let i = 0; i < 60; i++) {
+      const span = document.createElement('span');
+      span.textContent = i < 10 ? '0' + i : i;
+      minuteContainer.appendChild(span);
+    }
+
+    // Create second spans
+    const secondsContainer = document.querySelector('.seconds5');
+    for (let i = 0; i < 60; i++) {
+      const span = document.createElement('span');
+      span.textContent = i < 10 ? '0' + i : i;
+      secondsContainer.appendChild(span);
+    }
+
+    // Set animation delays based on current time
+    function setTimeAnimations() {
+      const now = moment();
+      const second = now.second();
+      const minute = (now.minute() * 60) + second;
+      const hour = (now.hour() * 3600) + minute;
+      
+      const secString = -second + 's';
+      const minString = -minute + 's';
+      const hourString = -hour + 's';
+      
+      document.querySelector('.seconds5').style.animationDelay = secString;
+      document.querySelector('.minute5').style.animationDelay = minString;
+      document.querySelector('.hour5').style.animationDelay = hourString;
+    }
+
+    // Initialize the clock
+    setTimeAnimations();
+
+// Clock 5 initialization function
+function initializeClock5() {
+    // Create hour spans
+    const hourContainer = document.querySelector('.hour5');
+    if (hourContainer) {
+        hourContainer.innerHTML = ''; // Clear existing content
+        for (let i = 0; i < 24; i++) {
+            const span = document.createElement('span');
+            span.textContent = i;
+            hourContainer.appendChild(span);
+        }
+    }
+
+    // Create minute spans
+    const minuteContainer = document.querySelector('.minute5');
+    if (minuteContainer) {
+        minuteContainer.innerHTML = ''; // Clear existing content
+        for (let i = 0; i < 60; i++) {
+            const span = document.createElement('span');
+            span.textContent = i < 10 ? '0' + i : i;
+            minuteContainer.appendChild(span);
+        }
+    }
+
+    // Create second spans
+    const secondsContainer = document.querySelector('.seconds5');
+    if (secondsContainer) {
+        secondsContainer.innerHTML = ''; // Clear existing content
+        for (let i = 0; i < 60; i++) {
+            const span = document.createElement('span');
+            span.textContent = i < 10 ? '0' + i : i;
+            secondsContainer.appendChild(span);
+        }
+    }
+
+    function setTimeAnimations() {
+        const now = new Date();
+        const second = now.getSeconds();
+        const minute = (now.getMinutes() * 60) + second;
+        const hour = (now.getHours() * 3600) + minute;
+        
+        const secString = -second + 's';
+        const minString = -minute + 's';
+        const hourString = -hour + 's';
+        
+        if (secondsContainer) {
+            secondsContainer.style.animationDelay = secString;
+        }
+        if (minuteContainer) {
+            minuteContainer.style.animationDelay = minString;
+        }
+        if (hourContainer) {
+            hourContainer.style.animationDelay = hourString;
+        }
+    }
+
+    // Initialize animations
+    setTimeAnimations();
+
+    // Update animations every second to ensure smooth transitions
+    const updateInterval = setInterval(setTimeAnimations, 1000);
+
+    // Return the interval ID for cleanup
+    return updateInterval;
 }

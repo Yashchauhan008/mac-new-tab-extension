@@ -590,6 +590,7 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  z-index: 10000;
 }
 
 .search-bar h1 {
@@ -1168,3 +1169,130 @@ svg {
   fill: #ee2560;
   transition: all 0.5s;
 }
+
+
+
+/* ----------------------------------- */
+.clock4{
+  z-index: 10;
+}
+    .column,
+    .colon {
+      display: inline-block;
+      vertical-align: top;
+      font-size: 86px;
+      line-height: 86px;
+      z-index: 10;
+    }
+    
+    .column {
+      transition: transform 300ms;
+    }
+    
+    .colon {
+      transition: transform 300ms;
+      transform: translateY(calc(50vh - 43px));
+    }
+    
+    .colon:after {
+      content: ':';
+    }
+    
+    .num {
+      transition: opacity 500ms, text-shadow 100ms;
+      opacity: 0.025;
+    }
+    
+    .num.visible {
+      opacity: 1.0;
+      text-shadow: 1px 1px 0px hsl(210, 50%, 40%);
+    }
+    
+    .num.close {
+      opacity: 0.35;
+    }
+    
+    .num.far {
+      opacity: 0.15;
+    }
+    
+    .num.distant {
+      opacity: 0.1;
+    }
+
+#default-category-section .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#default-category-section .category-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #ddd);
+    background: var(--button-bg, #fff);
+    color: var(--text-color, #666);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#default-category-section .category-btn:hover {
+    background: var(--button-hover-bg, #f5f5f5);
+}
+
+#default-category-section .category-btn.active {
+    background: var(--accent-color, #666);
+    color: var(--button-active-text, #fff);
+    border-color: var(--accent-color, #666);
+}
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.select-wrapper::after {
+    content: '▼';
+    font-size: 0.8em;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-color, #666);
+}
+
+#default-category-select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #ddd);
+    background: var(--button-bg, #fff);
+    color: var(--text-color, #666);
+    appearance: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+#default-category-select:hover {
+    border-color: var(--accent-color, #666);
+}
+
+#default-category-select:focus {
+    outline: none;
+    border-color: var(--accent-color, #666);
+    box-shadow: 0 0 0 2px var(--accent-color-transparent, rgba(102, 102, 102, 0.2));
+}
+
+/* For dark themes, adjust the dropdown background */
+[class*="theme-"] #default-category-select {
+    background: var(--button-bg, #fff);
+    color: var(--text-color, #666);
+}
+
+
+
+/* ---------------------clock 5-------------- */
+

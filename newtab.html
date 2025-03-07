@@ -80,21 +80,86 @@
       </div>
 
       <div class="clock-pos4 clocky">
-        <second class="clock">
-          <div class="seconds"></div>
-          <div class="minutes"></div>
-          <div class="minute">44</div>
-          <div class="hour"></div>
-        </second>
+        <div class="clock4">
+          <!-- Hours tens place -->
+          <div class="column">
+            <div class="num">0</div>
+            <div class="num">1</div>
+            <div class="num">2</div>
+          </div>
+
+          <!-- Hours ones place -->
+          <div class="column">
+            <div class="num">0</div>
+            <div class="num">1</div>
+            <div class="num">2</div>
+            <div class="num">3</div>
+            <div class="num">4</div>
+            <div class="num">5</div>
+            <div class="num">6</div>
+            <div class="num">7</div>
+            <div class="num">8</div>
+            <div class="num">9</div>
+          </div>
+
+          <!-- Colon separator -->
+          <div class="colon"></div>
+
+          <!-- Minutes tens place -->
+          <div class="column">
+            <div class="num">0</div>
+            <div class="num">1</div>
+            <div class="num">2</div>
+            <div class="num">3</div>
+            <div class="num">4</div>
+            <div class="num">5</div>
+          </div>
+
+          <!-- Minutes ones place -->
+          <div class="column">
+            <div class="num">0</div>
+            <div class="num">1</div>
+            <div class="num">2</div>
+            <div class="num">3</div>
+            <div class="num">4</div>
+            <div class="num">5</div>
+            <div class="num">6</div>
+            <div class="num">7</div>
+            <div class="num">8</div>
+            <div class="num">9</div>
+          </div>
+
+          <!-- Colon separator -->
+          <div class="colon"></div>
+
+          <!-- Seconds tens place -->
+          <div class="column">
+            <div class="num">0</div>
+            <div class="num">1</div>
+            <div class="num">2</div>
+            <div class="num">3</div>
+            <div class="num">4</div>
+            <div class="num">5</div>
+          </div>
+
+          <!-- Seconds ones place -->
+          <div class="column">
+            <div class="num">0</div>
+            <div class="num">1</div>
+            <div class="num">2</div>
+            <div class="num">3</div>
+            <div class="num">4</div>
+            <div class="num">5</div>
+            <div class="num">6</div>
+            <div class="num">7</div>
+            <div class="num">8</div>
+            <div class="num">9</div>
+          </div>
+        </div>
       </div>
 
       <div class="clock-pos5 clocky">
-        <second class="clock">
-          <div class="seconds"></div>
-          <div class="minutes"></div>
-          <div class="minute">44</div>
-          <div class="hour"></div>
-        </second>
+     
       </div>
 
       <div class="categories-section">
@@ -174,6 +239,21 @@
             </button>
           </div>
         </div>
+        <!-- clock scaler range -->
+        <div class="settings-section" id="clock-scaler-section">
+          <h3>Clock Size</h3>
+          <div class="scale-control">
+            <input
+              type="range"
+              id="clock-scale"
+              min="50"
+              max="150"
+              value="100"
+              step="5"
+            />
+            <span id="scale-value">100%</span>
+          </div>
+        </div>
         <!-- Shortcuts Section -->
         <div class="settings-section" id="shortcuts-section">
           <h3>Manage Shortcuts</h3>
@@ -185,6 +265,22 @@
           <ul id="shortcut-list">
             <!-- Dynamically populated shortcuts -->
           </ul>
+        </div>
+        <!-- Default Category Section -->
+        <div class="settings-section" id="default-category-section">
+          <h3>Default Category</h3>
+          <div class="select-wrapper">
+            <select id="default-category-select">
+              <option value="a">Notes</option>
+              <option value="b">Social</option>
+              <option value="c">Text</option>
+              <option value="d">Image</option>
+              <option value="e">Video</option>
+              <option value="f">Audio</option>
+              <option value="g">Design</option>
+              <option value="h">Extras</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
