@@ -40,14 +40,61 @@
     </div>
 
     <div class="main">
-      <div class="clock-pos">
-        <div id="clock">
-          <div class="middle"></div>
+      <div class="clock-pos1 clocky">
+        <div id="clock1">
           <div class="middle1"></div>
-          <div id="hour" class="hour"></div>
-          <div id="minute" class="minute"></div>
-          <div id="second" class="second"></div>
+          <div class="middle11"></div>
+          <div id="hour1" class="hour1"></div>
+          <div id="minute1" class="minute1"></div>
+          <div id="second1" class="second1"></div>
         </div>
+      </div>
+
+      <div class="clock-pos2 clocky">
+        <second class="clock2">
+          <div class="seconds2"></div>
+          <div class="minutes2"></div>
+          <div class="minute2">44</div>
+          <div class="hour2"></div>
+        </second>
+      </div>
+
+      <div class="clock-pos3 clocky">
+        <div class="clock3">
+          <svg id="clockSvg3" xmlns="http://www.w3.org/2000/svg">
+            <!-- Static outer ring and primary circle -->
+            <circle class="outerRing3" id="outerRing3" />
+            <circle class="primCircle3" id="primCircle3" />
+
+            <!-- Static spikes -->
+            <g id="spikes3"></g>
+
+            <!-- Dynamic parts: Triangle, secondary circles, and text -->
+            <path class="triangle3" id="trianglePath3" />
+            <circle class="secCircle3" id="hourCircle3" />
+            <circle class="secCircle3" id="minuteCircle3" />
+            <circle class="secCircle3" id="secondCircle3" />
+            <text class="textTime3" id="timeText3"></text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="clock-pos4 clocky">
+        <second class="clock">
+          <div class="seconds"></div>
+          <div class="minutes"></div>
+          <div class="minute">44</div>
+          <div class="hour"></div>
+        </second>
+      </div>
+
+      <div class="clock-pos5 clocky">
+        <second class="clock">
+          <div class="seconds"></div>
+          <div class="minutes"></div>
+          <div class="minute">44</div>
+          <div class="hour"></div>
+        </second>
       </div>
 
       <div class="categories-section">
@@ -62,6 +109,14 @@
           <button id="btn-f">Audio</button>
           <button id="btn-g">Design</button>
           <button id="btn-h">Extras</button>
+          <!-- <button id="Notes">Notes</button>
+          <button id="Social">Social</button>
+          <button id="Text">Text</button>
+          <button id="Image">Image</button>
+          <button id="Video">Video</button>
+          <button id="Audio">Audio</button>
+          <button id="Design">Design</button>
+          <button id="Extras">Extras</button> -->
         </div>
 
         <div id="websites-container" class="websites-container"></div>
@@ -81,6 +136,7 @@
 
     <!-- Settings Icon -->
     <div id="settings-icon">⚙️</div>
+    <div id="side-panel-blur"></div>
     <div id="side-panel" class="side-panel">
       <div class="side-panel-header">
         <h2>Settings</h2>
@@ -89,11 +145,34 @@
       <div class="side-panel-content">
         <!-- Dark Mode Toggle -->
         <div class="settings-section" id="dark-mode-section">
-          <h3>Dark Mode</h3>
-          <label class="switch">
-            <input type="checkbox" id="dark-mode-toggle" />
-            <span class="slider round"></span>
-          </label>
+          <h3>Themes</h3>
+          <div class="buttons">
+            <button onclick="setTheme('theme-1')">Theme 1</button>
+            <button onclick="setTheme('theme-2')">Theme 2</button>
+            <button onclick="setTheme('theme-3')">Theme 3</button>
+            <button onclick="setTheme('theme-4')">Theme 4</button>
+            <button onclick="setTheme('theme-5')">Theme 5</button>
+          </div>
+        </div>
+        <!-- Dark Mode Toggle -->
+        <div class="settings-section" id="fav-clock-section">
+          <h3>Clocks Mode</h3>
+          <div class="buttons">
+            <button data-clock="clock-pos1">Clock 1</button>
+            <button data-clock="clock-pos2">Clock 2</button>
+            <button data-clock="clock-pos3">Clock 3</button>
+            <button data-clock="clock-pos4">Clock 4</button>
+            <button data-clock="clock-pos5">Clock 5</button>
+          </div>
+        </div>
+        <!-- category section Toggle -->
+        <div class="settings-section" id="category-section-section">
+          <h3>Show categories</h3>
+          <div class="buttons">
+            <button id="toggle-categories-btn" data-state="show">
+              Hide Categories
+            </button>
+          </div>
         </div>
         <!-- Shortcuts Section -->
         <div class="settings-section" id="shortcuts-section">

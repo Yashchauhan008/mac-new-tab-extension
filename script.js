@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.querySelector('input[type="text"]');
   const settingsIcon = document.getElementById('settings-icon');
   const sidePanel = document.getElementById('side-panel');
+  const sidePanelBlur = document.getElementById('side-panel-blur')
   const closePanelBtn = document.getElementById('close-panel');
   const addShortcutBtn = document.getElementById('add-shortcut-btn');
   const shortcutList = document.getElementById('shortcut-list');
@@ -419,10 +420,18 @@ searchInput.addEventListener('keypress', (e) => {
   // Settings icon and side panel logic
   settingsIcon.addEventListener('click', () => {
     sidePanel.classList.toggle('open');
+    sidePanelBlur.classList.toggle('open');
   });
 
   closePanelBtn.addEventListener('click', () => {
     sidePanel.classList.remove('open');
+    sidePanelBlur.classList.remove('open');
+  });
+
+  // Optional: Close panel when clicking on blur
+  sidePanelBlur.addEventListener('click', () => {
+    sidePanel.classList.remove('open');
+    sidePanelBlur.classList.remove('open');
   });
 
   // Add shortcut button
@@ -432,6 +441,28 @@ searchInput.addEventListener('keypress', (e) => {
   
   // Initial load
   loadApps();
+
+  // Initialize the clock
+  initializeClocks();
+
+  // Initialize categories visibility
+  const toggleButton = document.getElementById('toggle-categories-btn');
+  const categoriesSection = document.querySelector('.categories-section');
+  
+  // Get saved preference or default to visible
+  const categoriesVisible = localStorage.getItem('categoriesVisible') !== 'false';
+  
+  if (!categoriesVisible) {
+    categoriesSection.style.display = 'none';
+    toggleButton.textContent = 'Show Categories';
+    toggleButton.setAttribute('data-state', 'hide');
+  }
+
+  // Add click event listener for toggle button
+  toggleButton.addEventListener('click', toggleCategories);
+
+  // Initialize clock 3
+  initializeClock3();
 });
 
 
@@ -440,39 +471,441 @@ searchInput.addEventListener('keypress', (e) => {
 
  // Default array of website objects
  const websites =[
-    { icon: "https://iconbuddy.com/favicon.ico", url: "https://iconbuddy.com/", description: "Icons", name: "iconbuddy", category: "a" },
-    { icon: "https://savee.it/favicon.ico", url: "https://savee.it/", description: "Stock Images", name: "savee", category: "a" },
-    // { icon: "https://www.flaticon.com/favicon.ico", url: "https://www.flaticon.com/", description: "Icons", name: "flaticon", category: "a" },
-    // { icon: "https://shapefest.com/favicon.ico", url: "https://shapefest.com/", description: "3D Shapes", name: "shapefest", category: "a" },
-    // { icon: "https://futicons.com/favicon.ico", url: "https://futicons.com/", description: "Icons", name: "futicons", category: "a" },
-    // { icon: "https://iconscout.com/favicon.ico", url: "https://iconscout.com/", description: "Icons", name: "iconscout", category: "a" },
-    // { icon: "https://boxicons.com/favicon.ico", url: "https://boxicons.com/", description: "Icons", name: "boxicons", category: "a" },
-    // { icon: "https://looka.com/favicon.ico", url: "https://looka.com/", description: "Logo Maker", name: "looka", category: "a" },
-    // { icon: "https://leonardo.ai/favicon.ico", url: "https://leonardo.ai", description: "AI Image Generator", name: "leonardo", category: "a" },
-    // { icon: "https://stablediffusionweb.com/favicon.ico", url: "https://stablediffusionweb.com", description: "AI Image Generator", name: "stablediffusionweb", category: "a" },
-    // { icon: "https://firefly.adobe.com/favicon.ico", url: "https://firefly.adobe.com/inspire", description: "Adobe AI Image Generator", name: "firefly", category: "a" },
-    { icon: "https://ideogram.ai/favicon.ico", url: "https://ideogram.ai/", description: "AI Image Generator", name: "ideogram", category: "a" },
-    { icon: "https://getimg.ai/favicon.ico", url: "https://getimg.ai/", description: "AI Image Generator", name: "getimg", category: "a" },
-    { icon: "https://unsplash.com/favicon.ico", url: "https://unsplash.com/", description: "Stock Images", name: "unsplash", category: "a" },
-    { icon: "https://www.pngwing.com/favicon.ico", url: "https://www.pngwing.com", description: "Transparent PNGs", name: "pngwing", category: "a" },
-    { icon: "https://www.emojis.com/favicon.ico", url: "https://www.emojis.com/", description: "Emojis", name: "emojis", category: "a" },
-    { icon: "https://in.pinterest.com/favicon.ico", url: "https://in.pinterest.com/", description: "Inspiration & Images", name: "pinterest", category: "a" },
-  
+    {
+        "icon": "https://chat.openai.com/favicon.ico",
+        "url": "https://chat.openai.com/",
+        "description": "ChatGPT by OpenAI",
+        "name": "ChatGPT",
+        "category": "c"
+    },
+    {
+        "icon": "https://bard.google.com/favicon.ico",
+        "url": "https://bard.google.com/",
+        "description": "Bard by Google",
+        "name": "Google Bard",
+        "category": "c"
+    },
+    {
+        "icon": "https://www.perplexity.ai/favicon.ico",
+        "url": "https://www.perplexity.ai/",
+        "description": "Perplexity AI - Conversational Search",
+        "name": "Perplexity AI",
+        "category": "c"
+    },
+    {
+        "icon": "https://www.character.ai/favicon.ico",
+        "url": "https://www.character.ai/",
+        "description": "Create & Chat with AI Characters",
+        "name": "Character AI",
+        "category": "c"
+    },
+    {
+        "icon": "https://claude.ai/favicon.ico",
+        "url": "https://claude.ai/",
+        "description": "Claude by Anthropic",
+        "name": "Claude",
+        "category": "c"
+    },
+    {
+        "icon": "https://www.jasper.ai/favicon.ico",
+        "url": "https://www.jasper.ai/",
+        "description": "AI Writing Assistant",
+        "name": "Jasper AI",
+        "category": "c"
+    },
+    {
+        "icon": "https://chat.forefront.ai/favicon.ico",
+        "url": "https://chat.forefront.ai/",
+        "description": "Forefront AI Chat",
+        "name": "Forefront AI",
+        "category": "c"
+    },
+    {
+        "icon": "https://pi.ai/favicon.ico",
+        "url": "https://pi.ai/",
+        "description": "Pi - Your Personal AI",
+        "name": "Pi AI",
+        "category": "c"
+    },
+    {
+        "icon": "https://beta.characterhub.io/favicon.ico",
+        "url": "https://beta.characterhub.io/",
+        "description": "Create & Explore AI Characters",
+        "name": "CharacterHub",
+        "category": "c"
+    },
 
-
-      { "icon": "https://freetts.com/favicon.ico", "url": "https://freetts.com/", "description": "Text to Speech", "name": "freetts", "category": "c" },
-      { "icon": "https://covers.ai/favicon.ico", "url": "https://covers.ai/", "description": "AI Audio Cover", "name": "covers", "category": "c" },
-      { "icon": "https://audiopen.ai/favicon.ico", "url": "https://audiopen.ai/", "description": "Audio Transcription", "name": "audiopen", "category": "c" },
-      { "icon": "https://elevenlabs.io/favicon.ico", "url": "https://elevenlabs.io/", "description": "AI Voice Synthesis", "name": "elevenlabs", "category": "c" },
+    { icon: "https://savee.it/favicon.ico", url: "https://savee.it/", description: "Stock Images", name: "savee", category: "d" },
+    { icon: "https://www.flaticon.com/favicon.ico", url: "https://www.flaticon.com/", description: "Icons", name: "flaticon", category: "d" },
+    { icon: "https://iconscout.com/favicon.ico", url: "https://iconscout.com/", description: "Icons", name: "iconscout", category: "d" },
+    { icon: "https://looka.com/favicon.ico", url: "https://looka.com/", description: "Logo Maker", name: "looka", category: "d" },
+    { icon: "https://leonardo.ai/favicon.ico", url: "https://leonardo.ai", description: "AI Image Generator", name: "leonardo", category: "d" },
+    { icon: "https://stablediffusionweb.com/favicon.ico", url: "https://stablediffusionweb.com", description: "AI Image Generator", name: "stablediffusionweb", category: "d" },
+    { icon: "https://www.emojis.com/favicon.ico", url: "https://www.emojis.com/", description: "Emojis", name: "emojis", category: "d" },
+    { icon: "https://in.pinterest.com/favicon.ico", url: "https://in.pinterest.com/", description: "Inspiration & Images", name: "pinterest", category: "d" },
+    // { icon: "https://firefly.adobe.com/favicon.ico", url: "https://firefly.adobe.com/inspire", description: "Adobe AI Image Generator", name: "firefly", category: "d" },
+    // { icon: "https://boxicons.com/favicon.ico", url: "https://boxicons.com/", description: "Icons", name: "boxicons", category: "d" },
+    // { icon: "https://ideogram.ai/favicon.ico", url: "https://ideogram.ai/", description: "AI Image Generator", name: "ideogram", category: "d" },
+    // { icon: "https://www.pngwing.com/favicon.ico", url: "https://www.pngwing.com", description: "Transparent PNGs", name: "pngwing", category: "d" },
+    // { icon: "https://shapefest.com/favicon.ico", url: "https://shapefest.com/", description: "3D Shapes", name: "shapefest", category: "d" },
     
 
-  { icon: "https://www.medium.com/favicon.ico", url: "https://medium.com", description: "Blogging Platform", category: "c" },
+    {
+      "icon": "https://web.whatsapp.com/favicon.ico",
+      "url": "https://web.whatsapp.com/",
+      "description": "WhatsApp Web Messaging",
+      "name": "WhatsApp",
+      "category": "b"
+    },
+    {
+      "icon": "https://web.telegram.org/favicon.ico",
+      "url": "https://web.telegram.org/",
+      "description": "Telegram Web Messaging",
+      "name": "Telegram",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.facebook.com/favicon.ico",
+      "url": "https://www.facebook.com/",
+      "description": "Social Network",
+      "name": "Facebook",
+      "category": "b"
+    },
+    {
+      "icon": "https://twitter.com/favicon.ico",
+      "url": "https://twitter.com/",
+      "description": "Microblogging Platform",
+      "name": "Twitter",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.linkedin.com/favicon.ico",
+      "url": "https://www.linkedin.com/",
+      "description": "Professional Networking",
+      "name": "LinkedIn",
+      "category": "b"
+    },
+    {
+      "icon": "https://snapchat.com/favicon.ico",
+      "url": "https://www.snapchat.com/",
+      "description": "Snapchat - Share Moments",
+      "name": "Snapchat",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.reddit.com/favicon.ico",
+      "url": "https://www.reddit.com/",
+      "description": "Community Discussions",
+      "name": "Reddit",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.tiktok.com/favicon.ico",
+      "url": "https://www.tiktok.com/",
+      "description": "Short Video Platform",
+      "name": "TikTok",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.pinterest.com/favicon.ico",
+      "url": "https://www.pinterest.com/",
+      "description": "Visual Discovery Platform",
+      "name": "Pinterest",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.youtube.com/favicon.ico",
+      "url": "https://www.youtube.com/",
+      "description": "Video Sharing Platform",
+      "name": "YouTube",
+      "category": "b"
+    },  
+    {
+      "icon": "https://discord.com/favicon.ico",
+      "url": "https://discord.com/",
+      "description": "Voice, Video & Text Chat",
+      "name": "Discord",
+      "category": "b"
+    },
+    {
+      "icon": "https://www.instagram.com/favicon.ico",
+      "url": "https://www.instagram.com/",
+      "description": "Photo & Video Sharing",
+      "name": "Instagram",
+      "category": "b"
+    },
 
 
-  { icon: "https://uiverse.io/favicon.ico", url: "https://uiverse.io", description: "UI Components", category: "d" },
+    
+    { icon: "https://freetts.com/favicon.ico", "url": "https://freetts.com/", "description": "Text to Speech", "name": "freetts", "category": "f" },
+    { icon: "https://covers.ai/favicon.ico", "url": "https://covers.ai/", "description": "AI Audio Cover", "name": "covers", "category": "f" },
+    { icon: "https://audiopen.ai/favicon.ico", "url": "https://audiopen.ai/", "description": "Audio Transcription", "name": "audiopen", "category": "f" },
+    { icon: "https://elevenlabs.io/favicon.ico", "url": "https://elevenlabs.io/", "description": "AI Voice Synthesis", "name": "elevenlabs", "category": "f" },
+    
+      {
+          icon: "https://invideo.io/favicon.ico",
+          url: "https://invideo.io/",
+          description: "Online Video Editor",
+          name: "invideo",
+          category: "e"
+      },
+      {
+          icon: "https://motionarray.com/favicon.ico",
+          url: "https://motionarray.com/",
+          description: "Stock Media & Templates",
+          name: "motionarray",
+          category: "e"
+      },
+      {
+          icon: "https://giphy.com/favicon.ico",
+          url: "https://giphy.com/",
+          description: "GIF Search Engine",
+          name: "giphy",
+          category: "e"
+      },
+      {
+          icon: "https://jitter.video/favicon.ico",
+          url: "https://jitter.video/",
+          description: "Motion Design Tool",
+          name: "jitter",
+          category: "e"
+      },
+      {
+          icon: "https://artgrid.io/favicon.ico",
+          url: "https://artgrid.io/",
+          description: "Royalty-Free Stock Footage",
+          name: "artgrid",
+          category: "e"
+      },
+      {
+          icon: "https://app.runwayml.com/favicon.ico",
+          url: "https://app.runwayml.com/login",
+          description: "AI Video Editing Platform",
+          name: "runwayml",
+          category: "e"
+      },
+
+  
+    
+    { icon: "https://www.medium.com/favicon.ico", url: "https://medium.com", description: "Blogging Platform", category: "h" },
+    { icon: "https://uiverse.io/favicon.ico", url: "https://uiverse.io", description: "UI Components", category: "h" },
+    { icon: "https://replit.com/favicon.ico", url: "https://replit.com", description: "online code editer", category: "h" },
+  
+
+      {
+          icon : "https://colorhunt.co/favicon.ico",
+          url : "https://colorhunt.co/",
+          description : "Free Color Palette Inspiration",
+          name : "colorhunt",
+          category : "g"
+      },
+      {
+          icon : "https://animista.net/favicon.ico",
+          url : "https://animista.net/",
+          description : "CSS Animation Tool",
+          name : "animista",
+          category : "g"
+      },
+      {
+          icon : "https://animate.style/favicon.ico",
+          url : "https://animate.style/",
+          description : "CSS Animation Library",
+          name : "animate-style",
+          category : "g"
+      },
+      {
+          icon : "https://app.haikei.app/favicon.ico",
+          url : "https://app.haikei.app/",
+          description : "SVG Shape Generator",
+          name : "haikei",
+          category : "g"
+      },
+      {
+          icon : "https://www.magicpattern.design/favicon.ico",
+          url : "https://www.magicpattern.design/",
+          description : "Pattern & Shape Generator",
+          name : "magicpattern",
+          category : "g"
+      },
+      {
+          icon : "https://animejs.com/favicon.ico",
+          url : "https://animejs.com/",
+          description : "JavaScript Animation Library",
+          name : "animejs",
+          category : "g"
+      },
+      {
+          icon : "https://www.blobmaker.app/favicon.ico",
+          url : "https://www.blobmaker.app/",
+          description : "Blob Shape Generator",
+          name : "blobmaker",
+          category : "g"
+      },
+      {
+          icon : "https://www.fffuel.co/favicon.ico",
+          url : "https://www.fffuel.co/",
+          description : "Creative Design Tools",
+          name : "fffuel",
+          category : "g"
+      },
+      {
+          icon : "https://stacksorted.com/favicon.ico",
+          url : "https://stacksorted.com/scroll-effects",
+          description : "Scroll Effect Inspirations",
+          name : "stacksorted",
+          category : "g"
+      },
+      {
+          icon : "https://typespiration.com/favicon.ico",
+          url : "https://typespiration.com/",
+          description : "Typography Inspiration",
+          name : "typespiration",
+          category : "g"
+      },
+      {
+          icon : "https://9elements.github.io/favicon.ico",
+          url : "https://9elements.github.io/",
+          description : "CSS Filter Generator",
+          name : "9elements",
+          category : "g"
+      },
+      {
+          icon : "https://color4bg.com/favicon.ico",
+          url : "https://color4bg.com/",
+          description : "Background Color Generator",
+          name : "color4bg",
+          category : "g"
+      },
+      {
+          icon : "https://patterns.helloyes.dev/favicon.ico",
+          url : "https://patterns.helloyes.dev/",
+          description : "Pattern Background Generator",
+          name : "helloyes-patterns",
+          category : "g"
+      },
+      {
+          icon : "https://cssgrid-generator.netlify.app/favicon.ico",
+          url : "https://cssgrid-generator.netlify.app/",
+          description : "CSS Grid Generator",
+          name : "cssgrid-generator",
+          category : "g"
+      },
+      {
+          icon : "https://www.eraser.io/favicon.ico",
+          url : "https://www.eraser.io/",
+          description : "Visual Collaboration Tool",
+          name : "eraser",
+          category : "g"
+      },
+      {
+          icon : "https://daisyui.com/favicon.ico",
+          url : "https://daisyui.com/",
+          description : "Tailwind Component Library",
+          name : "daisyui",
+          category : "g"
+      },
+      {
+          icon : "https://www.heroui.com/favicon.ico",
+          url : "https://www.heroui.com/",
+          description : "Hero Section Library",
+          name : "heroui",
+          category : "g"
+      },
+      {
+          icon : "https://ui.shadcn.com/favicon.ico",
+          url : "https://ui.shadcn.com/",
+          description : "shadcn/ui Component Library",
+          name : "shadcn",
+          category : "g"
+      },
+      {
+          icon : "https://ui.mantine.dev/favicon.ico",
+          url : "https://ui.mantine.dev/",
+          description : "Mantine UI Components",
+          name : "mantine",
+          category : "g"
+      },
 
 
-  { icon: "https://replit.com/favicon.ico", url: "https://replit.com", description: "online code editer", category: "e" }
+
+        {
+            "icon": "https://replicate.com/favicon.ico",
+            "url": "https://replicate.com/",
+            "description": "AI Models Hosting",
+            "name": "replicate",
+            "category": "h"
+        },
+        {
+            "icon": "https://huggingface.co/favicon.ico",
+            "url": "https://huggingface.co/",
+            "description": "AI Models & Datasets",
+            "name": "huggingface",
+            "category": "h"
+        },
+        {
+            "icon": "https://10015.io/favicon.ico",
+            "url": "https://10015.io/",
+            "description": "AI Tool Collection",
+            "name": "10015",
+            "category": "h"
+        },
+        {
+            "icon": "https://get.imagica.ai/favicon.ico",
+            "url": "https://get.imagica.ai/",
+            "description": "AI Creativity Tool",
+            "name": "imagica",
+            "category": "h"
+        },
+        {
+            "icon": "https://www.playbook.com/favicon.ico",
+            "url": "https://www.playbook.com/",
+            "description": "Creative Asset Management",
+            "name": "playbook",
+            "category": "h"
+        },
+        {
+            "icon": "https://www.dafont.com/favicon.ico",
+            "url": "https://www.dafont.com/",
+            "description": "Free Font Library",
+            "name": "dafont",
+            "category": "h"
+        },
+        {
+            "icon": "https://www.cofolios.com/favicon.ico",
+            "url": "https://www.cofolios.com/",
+            "description": "Product Designer Portfolios",
+            "name": "cofolios",
+            "category": "h"
+        },
+        {
+            "icon": "https://aframe.io/favicon.ico",
+            "url": "https://aframe.io/",
+            "description": "WebVR Framework",
+            "name": "aframe",
+            "category": "h"
+        },
+        {
+            "icon": "https://www.freefaces.gallery/favicon.ico",
+            "url": "https://www.freefaces.gallery",
+            "description": "Free Faces Font Collection",
+            "name": "freefaces",
+            "category": "h"
+        },
+        {
+            "icon": "https://www.fontspace.com/favicon.ico",
+            "url": "https://www.fontspace.com/",
+            "description": "Free Fonts",
+            "name": "fontspace",
+            "category": "h"
+        },
+        {
+            "icon": "https://www.fontshare.com/favicon.ico",
+            "url": "https://www.fontshare.com/",
+            "description": "Modern Fonts",
+            "name": "fontshare",
+            "category": "h"
+        }
+  
 ];
 
 
@@ -521,7 +954,7 @@ searchInput.addEventListener('keypress', (e) => {
 
 document.addEventListener("DOMContentLoaded", function () {
   // Set default category (e.g., "a")
-  const defaultCategory = "a";
+  const defaultCategory = "d";
   showCategory(defaultCategory);
 
   // Add event listeners for buttons
@@ -530,6 +963,9 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("btn-c").addEventListener("click", () => showCategory("c"));
   document.getElementById("btn-d").addEventListener("click", () => showCategory("d"));
   document.getElementById("btn-e").addEventListener("click", () => showCategory("e"));
+  document.getElementById("btn-f").addEventListener("click", () => showCategory("f"));
+  document.getElementById("btn-g").addEventListener("click", () => showCategory("g"));
+  document.getElementById("btn-h").addEventListener("click", () => showCategory("h"));
 });
 
 function showCategory(category) {
@@ -642,9 +1078,9 @@ function setTime() {
 	var minute = 360 * (m / 60);
 	var second = 360 * (s / 60);
 	
-	document.getElementById("hour").style.transform = 'rotate(' + hour + 'deg)';
-	document.getElementById("minute").style.transform = 'rotate(' + minute + 'deg)';
-	document.getElementById("second").style.transform = 'rotate(' + second + 'deg)';
+	document.getElementById("hour1").style.transform = 'rotate(' + hour + 'deg)';
+	document.getElementById("minute1").style.transform = 'rotate(' + minute + 'deg)';
+	document.getElementById("second1").style.transform = 'rotate(' + second + 'deg)';
 }
 
 
@@ -674,3 +1110,325 @@ function setTime() {
 // updateTime(); // Initial call to display time immediately
 
 
+// ---------------------super wathch analog----------------------
+
+const seconds = document.querySelector('.seconds2');
+const minutes = document.querySelector('.minutes2');
+const minute = document.querySelector('.minute2');
+const hour = document.querySelector('.hour2');
+
+// Create spikes
+for(let s = 0; s < 60 ; s++){
+  let mSpikeEl = document.createElement('i');
+  let sSpikeEl = document.createElement('i');
+  mSpikeEl.className = 'spike2'
+  sSpikeEl.className = 'spike2'
+  mSpikeEl.style = `--rotate:${6 * s}deg`;
+  sSpikeEl.style = `--rotate:${6 * s}deg`;
+  mSpikeEl.setAttribute('data-i', s);
+  sSpikeEl.setAttribute('data-i', s);
+
+  seconds.append(sSpikeEl);
+  minutes.append(mSpikeEl);
+}
+
+function getTime() {
+		let date = new Date(),
+    s  = date.getSeconds() ,
+    m  = date.getMinutes();
+  
+  	hour.textContent = date.getHours();
+  	minute.textContent = m;
+  
+
+  	minutes.style = `--dRotate:${6 * m}deg`;
+
+    if(s == 0){
+			seconds.classList.add('stop-anim2')
+    } else{
+      seconds.classList.remove('stop-anim2')
+    }
+    if(m == 0){
+			minutes.classList.add('stop-anim2')
+    } else{
+      minutes.classList.remove('stop-anim2')
+    }
+  	
+  		seconds.style = `--dRotate:${6 * s}deg`;
+}
+
+setInterval(getTime, 1000);
+getTime();
+
+
+// --------theme changer/------
+
+function setTheme(theme) {
+  document.documentElement.className = theme;
+}
+
+// Function to set the selected clock
+function setClock(clockClass) {
+  // Hide all clocks first
+  const allClocks = document.querySelectorAll('.clocky');
+  allClocks.forEach(clock => clock.style.display = 'none');
+
+  // Show the selected clock
+  const selectedClock = document.querySelector(`.${clockClass}`);
+  if (selectedClock) {
+    selectedClock.style.display = 'flex'; // or 'block' depending on your layout
+    localStorage.setItem('selectedClock', clockClass);
+  }
+}
+
+// Function to initialize clock display
+function initializeClocks() {
+  // Get saved clock preference or default to clock-pos1
+  const selectedClock = localStorage.getItem('selectedClock') || 'clock-pos1';
+  setClock(selectedClock);
+
+  // Add click event listeners to clock buttons
+  const clockButtons = document.querySelectorAll('#fav-clock-section button');
+  clockButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const clockClass = button.getAttribute('data-clock');
+      setClock(clockClass);
+    });
+  });
+}
+
+// Run this on page load
+document.addEventListener('DOMContentLoaded', applySavedClock);
+
+// Function to toggle categories visibility
+function toggleCategories() {
+  const categoriesSection = document.querySelector('.categories-section');
+  const toggleButton = document.getElementById('toggle-categories-btn');
+  const currentState = toggleButton.getAttribute('data-state');
+  
+  if (currentState === 'show') {
+    categoriesSection.style.display = 'none';
+    toggleButton.textContent = 'Show Categories';
+    toggleButton.setAttribute('data-state', 'hide');
+    localStorage.setItem('categoriesVisible', 'false');
+  } else {
+    categoriesSection.style.display = 'flex';
+    toggleButton.textContent = 'Hide Categories';
+    toggleButton.setAttribute('data-state', 'show');
+    localStorage.setItem('categoriesVisible', 'true');
+  }
+}
+
+
+const r1 = 5;
+const r2 = 10;
+const r3 = 15;
+
+const width = window.innerWidth;
+const height = window.innerHeight;
+const minWH = Math.min(width, height);
+const maxSize = minWH < 430 ? minWH - 30 : 400;
+
+const mid = maxSize / 2;
+const paddedRadius = (maxSize - 30) / 2;
+
+const rad = (a) => (Math.PI * (a - 90)) / 180;
+const rx = (r, a, c) => c + r * Math.cos(rad(a));
+const ry = (r, a, c) => c + r * Math.sin(rad(a));
+
+const svg = document.getElementById('clockSvg3');
+svg.setAttribute('width', maxSize);
+svg.setAttribute('height', maxSize);
+svg.setAttribute('viewBox', `0 0 ${maxSize} ${maxSize}`);
+
+document.getElementById('outerRing3').setAttribute('cx', mid);
+document.getElementById('outerRing3').setAttribute('cy', mid);
+document.getElementById('outerRing3').setAttribute('r', mid - 5);
+
+document.getElementById('primCircle3').setAttribute('cx', mid);
+document.getElementById('primCircle3').setAttribute('cy', mid);
+document.getElementById('primCircle3').setAttribute('r', mid - 15);
+
+// Draw static spikes once
+const spikesContainer = document.getElementById('spikes3');
+for (let i = 1; i <= 12; i++) {
+    const angle = i * 30;
+    const spike = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    spike.setAttribute('class', 'spike');
+    spike.setAttribute('x1', rx(paddedRadius - 5, angle, mid));
+    spike.setAttribute('y1', ry(paddedRadius - 5, angle, mid));
+    spike.setAttribute('x2', rx(paddedRadius - 10, angle, mid));
+    spike.setAttribute('y2', ry(paddedRadius - 10, angle, mid));
+    spikesContainer.appendChild(spike);
+}
+
+function getTimeParts() {
+    const t = new Date();
+    return {
+        h: t.getHours(),
+        m: t.getMinutes(),
+        s: t.getSeconds(),
+        str: t.toTimeString().slice(0, 8).replace(/:/g, ' : ')
+    };
+}
+
+function getHandPositions() {
+    const { h, m, s } = getTimeParts();
+
+    return {
+        hx: rx(paddedRadius - 30, h * 30, mid),
+        hy: ry(paddedRadius - 30, h * 30, mid),
+        mx: rx(paddedRadius - 30, m * 6, mid),
+        my: ry(paddedRadius - 30, m * 6, mid),
+        sx: rx(paddedRadius - 30, s * 6, mid),
+        sy: ry(paddedRadius - 30, s * 6, mid),
+    };
+}
+
+function updateClock() {
+    const time = getTimeParts();
+    const { hx, hy, mx, my, sx, sy } = getHandPositions();
+
+    document.getElementById('trianglePath3')
+        .setAttribute('d', `M${hx},${hy} L${mx},${my} L${sx},${sy} Z`);
+
+    document.getElementById('hourCircle3').setAttribute('cx', hx);
+    document.getElementById('hourCircle3').setAttribute('cy', hy);
+    document.getElementById('hourCircle3').setAttribute('r', r3);
+
+    document.getElementById('minuteCircle3').setAttribute('cx', mx);
+    document.getElementById('minuteCircle3').setAttribute('cy', my);
+    document.getElementById('minuteCircle3').setAttribute('r', r2);
+
+    document.getElementById('secondCircle3').setAttribute('cx', sx);
+    document.getElementById('secondCircle3').setAttribute('cy', sy);
+    document.getElementById('secondCircle3').setAttribute('r', r1);
+
+    document.getElementById('timeText3').setAttribute('x', mid);
+    document.getElementById('timeText3').setAttribute('y', mid);
+    document.getElementById('timeText3').textContent = time.str;
+}
+
+setInterval(updateClock, 1000);
+updateClock(); // initial render
+
+// Clock 3 initialization function
+function initializeClock3() {
+    const r1 = 5;
+    const r2 = 10;
+    const r3 = 15;
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const minWH = Math.min(width, height);
+    const maxSize = minWH < 430 ? minWH - 30 : 400;
+
+    const mid = maxSize / 2;
+    const paddedRadius = (maxSize - 30) / 2;
+
+    const rad = (a) => (Math.PI * (a - 90)) / 180;
+    const rx = (r, a, c) => c + r * Math.cos(rad(a));
+    const ry = (r, a, c) => c + r * Math.sin(rad(a));
+
+    const svg = document.getElementById('clockSvg3');
+    if (!svg) return; // Guard clause if element doesn't exist
+
+    svg.setAttribute('width', maxSize);
+    svg.setAttribute('height', maxSize);
+    svg.setAttribute('viewBox', `0 0 ${maxSize} ${maxSize}`);
+
+    const outerRing = document.getElementById('outerRing3');
+    const primCircle = document.getElementById('primCircle3');
+    
+    if (outerRing && primCircle) {
+        outerRing.setAttribute('cx', mid);
+        outerRing.setAttribute('cy', mid);
+        outerRing.setAttribute('r', mid - 5);
+
+        primCircle.setAttribute('cx', mid);
+        primCircle.setAttribute('cy', mid);
+        primCircle.setAttribute('r', mid - 15);
+    }
+
+    // Draw static spikes once
+    const spikesContainer = document.getElementById('spikes3');
+    if (spikesContainer) {
+        for (let i = 1; i <= 12; i++) {
+            const angle = i * 30;
+            const spike = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            spike.setAttribute('class', 'spike');
+            spike.setAttribute('x1', rx(paddedRadius - 5, angle, mid));
+            spike.setAttribute('y1', ry(paddedRadius - 5, angle, mid));
+            spike.setAttribute('x2', rx(paddedRadius - 10, angle, mid));
+            spike.setAttribute('y2', ry(paddedRadius - 10, angle, mid));
+            spikesContainer.appendChild(spike);
+        }
+    }
+
+    function getTimeParts() {
+        const t = new Date();
+        return {
+            h: t.getHours(),
+            m: t.getMinutes(),
+            s: t.getSeconds(),
+            str: t.toTimeString().slice(0, 8).replace(/:/g, ' : ')
+        };
+    }
+
+    function getHandPositions() {
+        const { h, m, s } = getTimeParts();
+        return {
+            hx: rx(paddedRadius - 30, h * 30, mid),
+            hy: ry(paddedRadius - 30, h * 30, mid),
+            mx: rx(paddedRadius - 30, m * 6, mid),
+            my: ry(paddedRadius - 30, m * 6, mid),
+            sx: rx(paddedRadius - 30, s * 6, mid),
+            sy: ry(paddedRadius - 30, s * 6, mid),
+        };
+    }
+
+    function updateClock() {
+        const time = getTimeParts();
+        const { hx, hy, mx, my, sx, sy } = getHandPositions();
+
+        const elements = {
+            trianglePath: document.getElementById('trianglePath3'),
+            hourCircle: document.getElementById('hourCircle3'),
+            minuteCircle: document.getElementById('minuteCircle3'),
+            secondCircle: document.getElementById('secondCircle3'),
+            timeText: document.getElementById('timeText3')
+        };
+
+        if (elements.trianglePath) {
+            elements.trianglePath.setAttribute('d', `M${hx},${hy} L${mx},${my} L${sx},${sy} Z`);
+        }
+
+        if (elements.hourCircle) {
+            elements.hourCircle.setAttribute('cx', hx);
+            elements.hourCircle.setAttribute('cy', hy);
+            elements.hourCircle.setAttribute('r', r3);
+        }
+
+        if (elements.minuteCircle) {
+            elements.minuteCircle.setAttribute('cx', mx);
+            elements.minuteCircle.setAttribute('cy', my);
+            elements.minuteCircle.setAttribute('r', r2);
+        }
+
+        if (elements.secondCircle) {
+            elements.secondCircle.setAttribute('cx', sx);
+            elements.secondCircle.setAttribute('cy', sy);
+            elements.secondCircle.setAttribute('r', r1);
+        }
+
+        if (elements.timeText) {
+            elements.timeText.setAttribute('x', mid);
+            elements.timeText.setAttribute('y', mid);
+            elements.timeText.textContent = time.str;
+        }
+    }
+
+    // Start the clock
+    updateClock(); // Initial render
+    setInterval(updateClock, 1000);
+}
