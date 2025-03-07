@@ -1188,9 +1188,53 @@ getTime();
 
 // --------theme changer/------
 
-function setTheme(theme) {
-  document.documentElement.className = theme;
+function setTheme(themeName) {
+    // Remove all existing theme classes
+    document.documentElement.className = '';
+    
+    // Add the new theme class
+    document.documentElement.classList.add(themeName);
+    
+    // Save theme preference to localStorage
+    localStorage.setItem('currentTheme', themeName);
+    
+    // Update active state of theme buttons
+    const themeButtons = document.querySelectorAll('#dark-mode-section .buttons button');
+    themeButtons.forEach(button => {
+        // Remove active class from all buttons
+        button.classList.remove('active');
+        
+        // Add active class to selected theme button
+        if (button.getAttribute('onclick').includes(themeName)) {
+            button.classList.add('active');
+        }
+    });
 }
+
+// Function to load and apply saved theme
+function loadSavedTheme() {
+    // Get saved theme from localStorage, default to 'theme-1' if none found
+    const savedTheme = localStorage.getItem('currentTheme') || 'theme-1';
+    
+    // Apply the saved theme
+    setTheme(savedTheme);
+}
+
+// Add event listener for when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Load saved theme
+    loadSavedTheme();
+    
+    // Add click event listeners to theme buttons
+    const themeButtons = document.querySelectorAll('#dark-mode-section .buttons button');
+    themeButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Extract theme name from onclick attribute
+            const themeName = e.target.getAttribute('onclick').match(/'([^']+)'/)[1];
+            setTheme(themeName);
+        });
+    });
+});
 
 // Function to set the selected clock
 function setClock(clockClass) {
@@ -1204,6 +1248,18 @@ function setClock(clockClass) {
     selectedClock.style.display = 'flex'; // or 'block' depending on your layout
     localStorage.setItem('selectedClock', clockClass);
   }
+
+  // Update active state of clock buttons
+  const clockButtons = document.querySelectorAll('#fav-clock-section button');
+  clockButtons.forEach(button => {
+    // Remove active class from all buttons
+    button.classList.remove('active');
+    
+    // Add active class to the selected clock button
+    if (button.getAttribute('data-clock') === clockClass) {
+      button.classList.add('active');
+    }
+  });
 }
 
 // Function to initialize clock display
@@ -1224,7 +1280,11 @@ function initializeClocks() {
 
 // Run this on page load
 document.addEventListener('DOMContentLoaded', applySavedClock);
-
+document.addEventListener('DOMContentLoaded', () => {
+  const savedClock = localStorage.getItem('selectedClock') || 'clock-pos1'; // Default to 'clock-pos1' if none found
+  setClock(savedClock); // Set the clock based on saved preference
+  // applySavedClock
+});
 // Function to toggle categories visibility
 function toggleCategories() {
   const categoriesSection = document.querySelector('.categories-section');
