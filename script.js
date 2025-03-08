@@ -485,6 +485,27 @@ searchInput.addEventListener('keypress', (e) => {
   window.addEventListener('unload', () => {
     clearInterval(clock5Interval);
   });
+
+  // Initialize tab count
+  initializeTabCount();
+
+  // Function to display the extension version
+  function displayExtensionVersion() {
+    const manifest = chrome.runtime.getManifest();
+    const version = manifest.version; // Get the version from the manifest
+    const versionSection = document.getElementById('extension-version'); // Get the span element
+    if (versionSection) {
+        versionSection.textContent = version; // Update the text content with the version
+    }
+  }
+
+  // Call displayExtensionVersion on page load
+  document.addEventListener("DOMContentLoaded", displayExtensionVersion);
+
+  // Add an event listener to the image
+  document.getElementById('instagram-icon').addEventListener('click', function() {
+    window.location.href = 'https://instagram.com/yash_chauhan________'; // Navigate to the URL
+  });
 });
 
 
@@ -1777,3 +1798,23 @@ function initializeClock5() {
     // Return the interval ID for cleanup
     return updateInterval;
 }
+
+// Initialize tab count
+function initializeTabCount() {
+    let tabCount = localStorage.getItem('tabCount');
+    tabCount = tabCount ? parseInt(tabCount) : 0; // Parse count or set to 0
+    tabCount += 1; // Increment the count
+    localStorage.setItem('tabCount', tabCount); // Store updated count
+    displayTabCount(tabCount); // Display the count
+}
+
+// Function to display the tab count
+function displayTabCount(count) {
+    const countSection = document.getElementById('tab-count'); // Get the span element
+    if (countSection) {
+        countSection.textContent = count; // Update the text content with the count
+    }
+}
+
+// Call initializeTabCount on page load
+document.addEventListener("DOMContentLoaded", initializeTabCount);

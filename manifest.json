@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Yash's New Tab",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "A custom UI for the new tab page.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"

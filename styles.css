@@ -600,12 +600,12 @@ input:checked + .slider:before {
   background-color: transparent;
   position: relative; /* Required for indicator positioning */
   z-index: 1; /* Ensure buttons are above the indicator */
-  color: var(--text-primary);
+  color: var(--button-primary);
   /* mix-blend-mode:difference ; */
 }
 .categories button.active {
   height: 100%;
-  background-color: var(--color-neutral-400);
+  background-color: var(--accent-color);
   border-radius: 20px;
   color: black;
 }
@@ -707,7 +707,7 @@ input:checked + .slider:before {
   z-index: 0; /* Place behind the buttons */
   transition: width 0.3s ease, transform 0.3s ease;
   pointer-events: none; /* Allows clicks to pass through */
-  background-color: var(--color-neutral-400);
+  background-color: var(--accent-color);
 }
 
 /* Initial state of the indicator (hidden) */
@@ -1321,20 +1321,21 @@ svg {
 
 /* Theme 5 - Forest Green */
 .theme-5 {
-    --primary-bg: #1b2519;
-    /* --secondary-bg: #2a3c25; */
-    --button-bg:#2a3c25;
-    --button-primary:white;
-    --accent-color: #7fba6b;
-    --text-primary: #f0f4f0;
-    --text-secondary: #b8c5b4;
-    --hover-color: #6a9e58;
-    /* --border-color: #354831; */
-    /* --shadow-color: rgba(127, 186, 107, 0.2); */
-    /* --clock-face: #2a3c25; */
-    --clock-number: #f0f4f0;
-    --clock-hand: #7fba6b;
+  --primary-bg: #2b1b2f;
+  /* --secondary-bg: #3c2a40; */
+  --button-bg: #cd7caac0;
+  --button-primary: white;
+  --accent-color: #ff92c2;
+  --text-primary: #ffe4f2;
+  --text-secondary: #f2aac0;
+  --hover-color: #e6639e;
+  /* --border-color: #a84d79; */
+  /* --shadow-color: rgba(209, 107, 165, 0.2); */
+  /* --clock-face: #3c2a40; */
+  --clock-number: #ffe4f2;
+  --clock-hand: #ff92c2;
 }
+
 .theme-6 {
   --primary-bg: var(--color-neutral-300);
   /* --secondary-bg: #f0f0f0; */
@@ -1346,7 +1347,7 @@ svg {
   --hover-color: #c68779;
   /* --border-color: #e3e1de; */
   /* --shadow-color: rgba(255, 76, 36, 0.2); */
-  --clock-face: #ffffff;
+  /* --clock-face: #ffffff; */
   --clock-number: #131313;
   --clock-hand: #ff4c24;
 }
@@ -1392,7 +1393,7 @@ body {
 }
 
 .search-option {
-    background-color: var(--secondary-bg);
+    background-color: var(--button-bg);
     color: var(--text-secondary);
 }
 
@@ -1678,5 +1679,31 @@ input[type="range"]::-moz-focus-outer {
   height: 35px;
   width: 35px;
   font-weight: bold;
+}
+
+
+.dev-block{
+  width: 100%;
+  background-color: red;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-color);
+  color: var(--primary-bg);
+  font-weight: 800;
+  font-size: 15px;
+  flex-direction: row;
+  gap: 33px;
+}
+.dev-img{
+  height: 20px;
+  width: 20px;
+}
+.dev-img img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
