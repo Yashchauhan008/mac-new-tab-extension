@@ -1700,6 +1700,7 @@ input[type="range"]::-moz-focus-outer {
 .dev-img{
   height: 20px;
   width: 20px;
+  cursor: pointer;
 }
 .dev-img img{
   height: 100%;

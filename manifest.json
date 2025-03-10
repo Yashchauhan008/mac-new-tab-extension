@@ -2,14 +2,14 @@
   "manifest_version": 3,
   "name": "Yash's New Tab",
   "version": "1.0.0",
-  "description": "A custom UI for the new tab page.",
+  "description": "A feature-rich new tab experience with customizable clock faces, 7 multicolor themes, AI shortcuts, Apple Dock!",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
   "icons": {
-    "16": "Images/adobe-illustrator.png",
+    "16": "Images/yash.png",
     "48": "Images/yash.png",
-    "128": "Images/adobe-premierepro.png"
+    "128": "Images/yash.png"
   },
   "permissions": [],
   "host_permissions": [],
