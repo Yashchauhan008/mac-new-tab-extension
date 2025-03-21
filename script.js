@@ -36,35 +36,80 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Favicon cache manager
 const FaviconManager = {
+  // Try different favicon paths
+  async tryFaviconPaths(domain) {
+    const paths = [
+      `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
+      `https://icon.horse/icon/${domain}`,
+      `https://favicongrabber.com/api/grab/${domain}`,
+      `https://${domain}/favicon.ico`,
+      `https://${domain}/favicon.png`,
+      `https://${domain}/apple-touch-icon.png`,
+      `https://${domain}/apple-touch-icon-precomposed.png`
+    ];
+
+    for (const path of paths) {
+      try {
+        const response = await fetch(path, { mode: 'no-cors' });
+        if (response.ok || response.type === 'opaque') {
+          return path;
+        }
+      } catch (error) {
+        console.warn(`Failed to fetch favicon from ${path}:`, error);
+        continue;
+      }
+    }
+    return null;
+  },
+
   async cacheFavicons(url) {
     try {
       const domain = new URL(url).hostname;
-      const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+      const iconUrl = await this.tryFaviconPaths(domain);
       
-      // Try to fetch and cache the favicon
+      if (!iconUrl) {
+        const fallbackIcon = this.generateFallbackIcon(url);
+        this.saveFaviconToCache(url, fallbackIcon);
+        return fallbackIcon;
+      }
+
       const response = await fetch(iconUrl);
       const blob = await response.blob();
       
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          // Store in localStorage
-          const iconCache = JSON.parse(localStorage.getItem('faviconCache')) || {};
-          iconCache[url] = reader.result;
-          localStorage.setItem('faviconCache', JSON.stringify(iconCache));
+          this.saveFaviconToCache(url, reader.result);
           resolve(iconUrl);
         };
         reader.readAsDataURL(blob);
       });
     } catch (error) {
       console.error('Error caching favicon:', error);
-      return null;
+      const fallbackIcon = this.generateFallbackIcon(url);
+      this.saveFaviconToCache(url, fallbackIcon);
+      return fallbackIcon;
+    }
+  },
+
+  saveFaviconToCache(url, iconData) {
+    try {
+      const iconCache = JSON.parse(localStorage.getItem('faviconCache')) || {};
+      iconCache[url] = iconData;
+      localStorage.setItem('faviconCache', JSON.stringify(iconCache));
+    } catch (error) {
+      console.error('Error saving favicon to cache:', error);
     }
   },
 
   getCachedFavicon(url) {
-    const iconCache = JSON.parse(localStorage.getItem('faviconCache')) || {};
-    return iconCache[url];
+    try {
+      const iconCache = JSON.parse(localStorage.getItem('faviconCache')) || {};
+      return iconCache[url];
+    } catch (error) {
+      console.error('Error getting cached favicon:', error);
+      return null;
+    }
   },
 
   generateFallbackIcon(url) {
@@ -81,14 +126,20 @@ const FaviconManager = {
       }
       const color = '#' + ('000000' + (hash & 0xFFFFFF).toString(16)).slice(-6);
       
-      // Draw circle
-      ctx.fillStyle = color;
+      // Draw circle with gradient
+      const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(1, this.adjustColor(color, -30));
+      ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(32, 32, 32, 0, Math.PI * 2);
       ctx.fill();
       
-      // Draw letter
+      // Draw letter with shadow
       const letter = new URL(url).hostname.replace('www.', '')[0].toUpperCase();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetY = 2;
       ctx.fillStyle = 'white';
       ctx.font = 'bold 32px Arial';
       ctx.textAlign = 'center';
@@ -98,8 +149,17 @@ const FaviconManager = {
       return canvas.toDataURL();
     } catch (error) {
       console.error('Error generating fallback icon:', error);
-      return 'default-favicon.png';
+      return '/Images/loom.png';
     }
+  },
+
+  // Helper function to adjust color brightness
+  adjustColor(color, amount) {
+    const hex = color.replace('#', '');
+    const r = Math.max(Math.min(parseInt(hex.substring(0, 2), 16) + amount, 255), 0);
+    const g = Math.max(Math.min(parseInt(hex.substring(2, 4), 16) + amount, 255), 0);
+    const b = Math.max(Math.min(parseInt(hex.substring(4, 6), 16) + amount, 255), 0);
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
   }
 };
 
@@ -1309,12 +1369,9 @@ function initializeClocks() {
   });
 }
 
-// Run this on page load
-document.addEventListener('DOMContentLoaded', applySavedClock);
+// Initialize clock on page load
 document.addEventListener('DOMContentLoaded', () => {
-  const savedClock = localStorage.getItem('selectedClock') || 'clock-pos1'; // Default to 'clock-pos1' if none found
-  setClock(savedClock); // Set the clock based on saved preference
-  // applySavedClock
+  initializeClocks(); // This will handle setting the saved clock preference
 });
 // Function to toggle categories visibility
 function toggleCategories() {
@@ -1701,47 +1758,7 @@ function initializeDefaultCategory() {
 
 
 
-const hourContainer = document.querySelector('.hour5');
-    for (let i = 0; i < 24; i++) {
-      const span = document.createElement('span');
-      span.textContent = i;
-      hourContainer.appendChild(span);
-    }
-
-    // Create minute spans
-    const minuteContainer = document.querySelector('.minute5');
-    for (let i = 0; i < 60; i++) {
-      const span = document.createElement('span');
-      span.textContent = i < 10 ? '0' + i : i;
-      minuteContainer.appendChild(span);
-    }
-
-    // Create second spans
-    const secondsContainer = document.querySelector('.seconds5');
-    for (let i = 0; i < 60; i++) {
-      const span = document.createElement('span');
-      span.textContent = i < 10 ? '0' + i : i;
-      secondsContainer.appendChild(span);
-    }
-
-    // Set animation delays based on current time
-    function setTimeAnimations() {
-      const now = moment();
-      const second = now.second();
-      const minute = (now.minute() * 60) + second;
-      const hour = (now.hour() * 3600) + minute;
-      
-      const secString = -second + 's';
-      const minString = -minute + 's';
-      const hourString = -hour + 's';
-      
-      document.querySelector('.seconds5').style.animationDelay = secString;
-      document.querySelector('.minute5').style.animationDelay = minString;
-      document.querySelector('.hour5').style.animationDelay = hourString;
-    }
-
-    // Initialize the clock
-    setTimeAnimations();
+// No clock implementation for clock-pos5
 
 // Clock 5 initialization function
 function initializeClock5() {

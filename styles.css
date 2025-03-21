@@ -55,6 +55,17 @@ body {
   }
 }
 
+/* No Clock Display */
+.no-clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5em;
+  font-family: 'Comfortaa', sans-serif;
+  color: var(--color-neutral-500);
+}
+
 /* Mobile Portrait */
 @media screen and (max-width: 479px) {
   :root {
