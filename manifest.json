@@ -3,6 +3,14 @@
   "name": "Yash's New Tab",
   "version": "1.0.0",
   "description": "A feature-rich new tab experience with customizable clock faces, 7 multicolor themes, AI shortcuts, Apple Dock!",
+  "permissions": ["search"],
+	"optional_permissions": ["bookmarks"],
+	"host_permissions": [
+		"https://www.google.com/complete/search*",
+		"https://duckduckgo.com/ac/*",
+		"https://search.brave.com/api/suggest*",
+		"https://*.wikipedia.org/w/api.php?action=opensearch&search=*"
+	],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
@@ -11,8 +19,6 @@
     "48": "Images/yash.png",
     "128": "Images/yash.png"
   },
-  "permissions": [],
-  "host_permissions": [],
   "web_accessible_resources": [
     {
       "resources": [

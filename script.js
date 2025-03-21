@@ -110,6 +110,16 @@ async function getFavicon(url) {
     if (navigator.onLine) {
       const domain = new URL(url).hostname;
       const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+      
+      // Fetch the favicon to check if it's valid
+      const response = await fetch(iconUrl);
+      
+      // If the response is not ok, return the default icon
+      if (!response.ok) {
+        return './Images/loom.png'; // Update this path to the actual location of loom.png
+      }
+      
+      // Cache the favicon if it's valid
       await FaviconManager.cacheFavicons(url);
       return iconUrl;
     }
@@ -120,11 +130,11 @@ async function getFavicon(url) {
       return cachedIcon;
     }
     
-    // Fallback to generated icon
-    return FaviconManager.generateFallbackIcon(url);
+    // If no favicon is found, return the default icon
+    return './Images/loom.png'; // Update this path to the actual location of loom.png
   } catch (error) {
     console.error('Error fetching favicon:', error);
-    return 'default-favicon.png';
+    return './Images/loom.png'; // Update this path to the actual location of loom.png
   }
 }
 
