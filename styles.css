@@ -56,14 +56,11 @@ body {
 }
 
 /* No Clock Display */
+.clock-pos5{
+  display: none;
+}
 .no-clock {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  font-size: 1.5em;
-  font-family: 'Comfortaa', sans-serif;
-  color: var(--color-neutral-500);
+  display: none;
 }
 
 /* Mobile Portrait */

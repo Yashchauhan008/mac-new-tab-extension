@@ -162,33 +162,37 @@ const FaviconManager = {
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
   }
 };
-
-// Modified getFavicon function - replace your existing one with this
+//this use for dock fevicon
+// Modified getFavicon function - replace your existing one with this 
 async function getFavicon(url) {
   try {
-    // If online, try to get and cache the favicon
-    if (navigator.onLine) {
-      const domain = new URL(url).hostname;
-      const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-      
-      // Fetch the favicon to check if it's valid
-      const response = await fetch(iconUrl);
-      
-      // If the response is not ok, return the default icon
-      if (!response.ok) {
-        return './Images/loom.png'; // Update this path to the actual location of loom.png
-      }
-      
-      // Cache the favicon if it's valid
-      await FaviconManager.cacheFavicons(url);
-      return iconUrl;
-    }
+    const domain = new URL(url).hostname;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
     
-    // If offline, try to get cached version
-    const cachedIcon = FaviconManager.getCachedFavicon(url);
-    if (cachedIcon) {
-      return cachedIcon;
+    // Check cache first
+    const cachedFavicon = localStorage.getItem(`favicon_${domain}`);
+    if (cachedFavicon) {
+      return cachedFavicon;
     }
+
+    // If online and not in cache, fetch from Google's service
+    if (navigator.onLine) {
+      const response = await fetch(googleFaviconUrl);
+      if (response.ok) {
+        const blob = await response.blob();
+        const base64data = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+        localStorage.setItem(`favicon_${domain}`, base64data);
+        return base64data;
+      }
+      return googleFaviconUrl; // Fallback to direct Google URL if blob conversion fails
+    }
+
+    // If offline and not in cache, return default icon
+    return './Images/loom.png';
     
     // If no favicon is found, return the default icon
     return './Images/loom.png'; // Update this path to the actual location of loom.png
@@ -585,77 +589,77 @@ searchInput.addEventListener('keypress', (e) => {
  // Default array of website objects
  const websites =[
     {
-        "icon": "https://chat.openai.com/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=chat.openai.com&sz=64",
         "url": "https://chat.openai.com/",
         "description": "ChatGPT by OpenAI",
         "name": "ChatGPT",
         "category": "c"
     },
     {
-        "icon": "https://bard.google.com/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=bard.google.com&sz=64",
         "url": "https://bard.google.com/",
         "description": "Bard by Google",
         "name": "Google Bard",
         "category": "c"
     },
     {
-        "icon": "https://www.perplexity.ai/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=www.perplexity.ai&sz=64",
         "url": "https://www.perplexity.ai/",
         "description": "Perplexity AI - Conversational Search",
         "name": "Perplexity AI",
         "category": "c"
     },
     {
-        "icon": "https://www.character.ai/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=www.character.ai&sz=64",
         "url": "https://www.character.ai/",
         "description": "Create & Chat with AI Characters",
         "name": "Character AI",
         "category": "c"
     },
     {
-        "icon": "https://claude.ai/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=claude.ai&sz=64",
         "url": "https://claude.ai/",
         "description": "Claude by Anthropic",
         "name": "Claude",
         "category": "c"
     },
     {
-        "icon": "https://www.jasper.ai/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=www.jasper.ai&sz=64",
         "url": "https://www.jasper.ai/",
         "description": "AI Writing Assistant",
         "name": "Jasper AI",
         "category": "c"
     },
     {
-        "icon": "https://chat.forefront.ai/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=chat.forefront.ai&sz=64",
         "url": "https://chat.forefront.ai/",
         "description": "Forefront AI Chat",
         "name": "Forefront AI",
         "category": "c"
     },
     {
-        "icon": "https://pi.ai/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=pi.ai&sz=64",
         "url": "https://pi.ai/",
         "description": "Pi - Your Personal AI",
         "name": "Pi AI",
         "category": "c"
     },
     {
-        "icon": "https://beta.characterhub.io/favicon.ico",
+        "icon": "https://www.google.com/s2/favicons?domain=beta.characterhub.io&sz=64",
         "url": "https://beta.characterhub.io/",
         "description": "Create & Explore AI Characters",
         "name": "CharacterHub",
         "category": "c"
     },
 
-    { icon: "https://savee.it/favicon.ico", url: "https://savee.it/", description: "Stock Images", name: "savee", category: "d" },
-    { icon: "https://www.flaticon.com/favicon.ico", url: "https://www.flaticon.com/", description: "Icons", name: "flaticon", category: "d" },
-    { icon: "https://iconscout.com/favicon.ico", url: "https://iconscout.com/", description: "Icons", name: "iconscout", category: "d" },
-    { icon: "https://looka.com/favicon.ico", url: "https://looka.com/", description: "Logo Maker", name: "looka", category: "d" },
-    { icon: "https://leonardo.ai/favicon.ico", url: "https://leonardo.ai", description: "AI Image Generator", name: "leonardo", category: "d" },
-    { icon: "https://stablediffusionweb.com/favicon.ico", url: "https://stablediffusionweb.com", description: "AI Image Generator", name: "stablediffusionweb", category: "d" },
-    { icon: "https://www.emojis.com/favicon.ico", url: "https://www.emojis.com/", description: "Emojis", name: "emojis", category: "d" },
-    { icon: "https://in.pinterest.com/favicon.ico", url: "https://in.pinterest.com/", description: "Inspiration & Images", name: "pinterest", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=savee.it&sz=64", url: "https://savee.it/", description: "Stock Images", name: "savee", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=www.flaticon.com&sz=64", url: "https://www.flaticon.com/", description: "Icons", name: "flaticon", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=iconscout.com&sz=64", url: "https://iconscout.com/", description: "Icons", name: "iconscout", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=looka.com&sz=64", url: "https://looka.com/", description: "Logo Maker", name: "looka", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=leonardo.ai&sz=64", url: "https://leonardo.ai", description: "AI Image Generator", name: "leonardo", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=stablediffusionweb.com&sz=64", url: "https://stablediffusionweb.com", description: "AI Image Generator", name: "stablediffusionweb", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=www.emojis.com&sz=64", url: "https://www.emojis.com/", description: "Emojis", name: "emojis", category: "d" },
+    { icon: "https://www.google.com/s2/favicons?domain=in.pinterest.com&sz=64", url: "https://in.pinterest.com/", description: "Inspiration & Images", name: "pinterest", category: "d" },
     // { icon: "https://firefly.adobe.com/favicon.ico", url: "https://firefly.adobe.com/inspire", description: "Adobe AI Image Generator", name: "firefly", category: "d" },
     // { icon: "https://boxicons.com/favicon.ico", url: "https://boxicons.com/", description: "Icons", name: "boxicons", category: "d" },
     // { icon: "https://ideogram.ai/favicon.ico", url: "https://ideogram.ai/", description: "AI Image Generator", name: "ideogram", category: "d" },
@@ -664,84 +668,84 @@ searchInput.addEventListener('keypress', (e) => {
     
 
     {
-      "icon": "https://web.whatsapp.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=web.whatsapp.com&sz=64",
       "url": "https://web.whatsapp.com/",
       "description": "WhatsApp Web Messaging",
       "name": "WhatsApp",
       "category": "b"
     },
     {
-      "icon": "https://web.telegram.org/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=web.telegram.org&sz=64",
       "url": "https://web.telegram.org/",
       "description": "Telegram Web Messaging",
       "name": "Telegram",
       "category": "b"
     },
     {
-      "icon": "https://www.facebook.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.facebook.com&sz=64",
       "url": "https://www.facebook.com/",
       "description": "Social Network",
       "name": "Facebook",
       "category": "b"
     },
     {
-      "icon": "https://twitter.com/favicon.ico",
-      "url": "https://twitter.com/",
+      "icon": "https://www.google.com/s2/favicons?domain=x.com&sz=64",
+      "url": "https://x.com/",
       "description": "Microblogging Platform",
       "name": "Twitter",
       "category": "b"
     },
     {
-      "icon": "https://www.linkedin.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.linkedin.com&sz=64",
       "url": "https://www.linkedin.com/",
       "description": "Professional Networking",
       "name": "LinkedIn",
       "category": "b"
     },
     {
-      "icon": "https://snapchat.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=snapchat.com&sz=64",
       "url": "https://www.snapchat.com/",
       "description": "Snapchat - Share Moments",
       "name": "Snapchat",
       "category": "b"
     },
     {
-      "icon": "https://www.reddit.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.reddit.com&sz=64",
       "url": "https://www.reddit.com/",
       "description": "Community Discussions",
       "name": "Reddit",
       "category": "b"
     },
     {
-      "icon": "https://www.tiktok.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.tiktok.com&sz=64",
       "url": "https://www.tiktok.com/",
       "description": "Short Video Platform",
       "name": "TikTok",
       "category": "b"
     },
     {
-      "icon": "https://www.pinterest.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.pinterest.com&sz=64",
       "url": "https://www.pinterest.com/",
       "description": "Visual Discovery Platform",
       "name": "Pinterest",
       "category": "b"
     },
     {
-      "icon": "https://www.youtube.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.youtube.com&sz=64",
       "url": "https://www.youtube.com/",
       "description": "Video Sharing Platform",
       "name": "YouTube",
       "category": "b"
     },  
     {
-      "icon": "https://discord.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=discord.com&sz=64",
       "url": "https://discord.com/",
       "description": "Voice, Video & Text Chat",
       "name": "Discord",
       "category": "b"
     },
     {
-      "icon": "https://www.instagram.com/favicon.ico",
+      "icon": "https://www.google.com/s2/favicons?domain=www.instagram.com&sz=64",
       "url": "https://www.instagram.com/",
       "description": "Photo & Video Sharing",
       "name": "Instagram",
@@ -750,48 +754,48 @@ searchInput.addEventListener('keypress', (e) => {
 
 
     
-    { icon: "https://freetts.com/favicon.ico", "url": "https://freetts.com/", "description": "Text to Speech", "name": "freetts", "category": "f" },
-    { icon: "https://covers.ai/favicon.ico", "url": "https://covers.ai/", "description": "AI Audio Cover", "name": "covers", "category": "f" },
-    { icon: "https://audiopen.ai/favicon.ico", "url": "https://audiopen.ai/", "description": "Audio Transcription", "name": "audiopen", "category": "f" },
-    { icon: "https://elevenlabs.io/favicon.ico", "url": "https://elevenlabs.io/", "description": "AI Voice Synthesis", "name": "elevenlabs", "category": "f" },
+    { icon: "https://www.google.com/s2/favicons?domain=freetts.com&sz=64", "url": "https://freetts.com/", "description": "Text to Speech", "name": "freetts", "category": "f" },
+    { icon: "https://www.google.com/s2/favicons?domain=covers.ai&sz=64", "url": "https://covers.ai/", "description": "AI Audio Cover", "name": "covers", "category": "f" },
+    { icon: "https://www.google.com/s2/favicons?domain=audiopen.ai&sz=64", "url": "https://audiopen.ai/", "description": "Audio Transcription", "name": "audiopen", "category": "f" },
+    { icon: "https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=64", "url": "https://elevenlabs.io/", "description": "AI Voice Synthesis", "name": "elevenlabs", "category": "f" },
     
       {
-          icon: "https://invideo.io/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=invideo.io&sz=64",
           url: "https://invideo.io/",
           description: "Online Video Editor",
           name: "invideo",
           category: "e"
       },
       {
-          icon: "https://motionarray.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=motionarray.com&sz=64",
           url: "https://motionarray.com/",
           description: "Stock Media & Templates",
           name: "motionarray",
           category: "e"
       },
       {
-          icon: "https://giphy.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=giphy.com&sz=64",
           url: "https://giphy.com/",
           description: "GIF Search Engine",
           name: "giphy",
           category: "e"
       },
       {
-          icon: "https://jitter.video/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=jitter.video&sz=64",
           url: "https://jitter.video/",
           description: "Motion Design Tool",
           name: "jitter",
           category: "e"
       },
       {
-          icon: "https://artgrid.io/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=artgrid.io&sz=64",
           url: "https://artgrid.io/",
           description: "Royalty-Free Stock Footage",
           name: "artgrid",
           category: "e"
       },
       {
-          icon: "https://app.runwayml.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=app.runwayml.com&sz=64",
           url: "https://app.runwayml.com/login",
           description: "AI Video Editing Platform",
           name: "runwayml",
@@ -800,139 +804,139 @@ searchInput.addEventListener('keypress', (e) => {
 
   
     
-    { icon: "https://www.medium.com/favicon.ico", url: "https://medium.com", description: "Blogging Platform", category: "h" },
-    { icon: "https://uiverse.io/favicon.ico", url: "https://uiverse.io", description: "UI Components", category: "h" },
-    { icon: "https://replit.com/favicon.ico", url: "https://replit.com", description: "online code editer", category: "h" },
+    { icon: "https://www.google.com/s2/favicons?domain=www.medium.com&sz=64", url: "https://medium.com", description: "Blogging Platform", category: "h" },
+    { icon: "https://www.google.com/s2/favicons?domain=uiverse.io&sz=64", url: "https://uiverse.io", description: "UI Components", category: "h" },
+    { icon: "https://www.google.com/s2/favicons?domain=replit.com&sz=64", url: "https://replit.com", description: "online code editer", category: "h" },
   
 
       {
-          icon : "https://colorhunt.co/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=colorhunt.co&sz=64",
           url : "https://colorhunt.co/",
           description : "Free Color Palette Inspiration",
           name : "colorhunt",
           category : "g"
       },
       {
-          icon : "https://animista.net/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=animista.net&sz=64",
           url : "https://animista.net/",
           description : "CSS Animation Tool",
           name : "animista",
           category : "g"
       },
       {
-          icon : "https://animate.style/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=animate.style&sz=64",
           url : "https://animate.style/",
           description : "CSS Animation Library",
           name : "animate-style",
           category : "g"
       },
       {
-          icon : "https://app.haikei.app/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=app.haikei.app&sz=64",
           url : "https://app.haikei.app/",
           description : "SVG Shape Generator",
           name : "haikei",
           category : "g"
       },
       {
-          icon : "https://www.magicpattern.design/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=www.magicpattern.design&sz=64",
           url : "https://www.magicpattern.design/",
           description : "Pattern & Shape Generator",
           name : "magicpattern",
           category : "g"
       },
       {
-          icon : "https://animejs.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=animejs.com&sz=64",
           url : "https://animejs.com/",
           description : "JavaScript Animation Library",
           name : "animejs",
           category : "g"
       },
       {
-          icon : "https://www.blobmaker.app/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=www.blobmaker.app&sz=64",
           url : "https://www.blobmaker.app/",
           description : "Blob Shape Generator",
           name : "blobmaker",
           category : "g"
       },
       {
-          icon : "https://www.fffuel.co/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=www.fffuel.co&sz=64",
           url : "https://www.fffuel.co/",
           description : "Creative Design Tools",
           name : "fffuel",
           category : "g"
       },
       {
-          icon : "https://stacksorted.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=stacksorted.com&sz=64",
           url : "https://stacksorted.com/scroll-effects",
           description : "Scroll Effect Inspirations",
           name : "stacksorted",
           category : "g"
       },
       {
-          icon : "https://typespiration.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=typespiration.com&sz=64",
           url : "https://typespiration.com/",
           description : "Typography Inspiration",
           name : "typespiration",
           category : "g"
       },
       {
-          icon : "https://9elements.github.io/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=9elements.github.io&sz=64",
           url : "https://9elements.github.io/",
           description : "CSS Filter Generator",
           name : "9elements",
           category : "g"
       },
       {
-          icon : "https://color4bg.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=color4bg.com&sz=64",
           url : "https://color4bg.com/",
           description : "Background Color Generator",
           name : "color4bg",
           category : "g"
       },
       {
-          icon : "https://patterns.helloyes.dev/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=patterns.helloyes.dev&sz=64",
           url : "https://patterns.helloyes.dev/",
           description : "Pattern Background Generator",
           name : "helloyes-patterns",
           category : "g"
       },
       {
-          icon : "https://cssgrid-generator.netlify.app/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=cssgrid-generator.netlify.app&sz=64",
           url : "https://cssgrid-generator.netlify.app/",
           description : "CSS Grid Generator",
           name : "cssgrid-generator",
           category : "g"
       },
       {
-          icon : "https://www.eraser.io/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=www.eraser.io&sz=64",
           url : "https://www.eraser.io/",
           description : "Visual Collaboration Tool",
           name : "eraser",
           category : "g"
       },
       {
-          icon : "https://daisyui.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=daisyui.com&sz=64",
           url : "https://daisyui.com/",
           description : "Tailwind Component Library",
           name : "daisyui",
           category : "g"
       },
       {
-          icon : "https://www.heroui.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=www.heroui.com&sz=64",
           url : "https://www.heroui.com/",
           description : "Hero Section Library",
           name : "heroui",
           category : "g"
       },
       {
-          icon : "https://ui.shadcn.com/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=ui.shadcn.com&sz=64",
           url : "https://ui.shadcn.com/",
           description : "shadcn/ui Component Library",
           name : "shadcn",
           category : "g"
       },
       {
-          icon : "https://ui.mantine.dev/favicon.ico",
+          icon: "https://www.google.com/s2/favicons?domain=ui.mantine.dev&sz=64",
           url : "https://ui.mantine.dev/",
           description : "Mantine UI Components",
           name : "mantine",
@@ -942,77 +946,77 @@ searchInput.addEventListener('keypress', (e) => {
 
 
         {
-            "icon": "https://replicate.com/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=replicate.com&sz=64",
             "url": "https://replicate.com/",
             "description": "AI Models Hosting",
             "name": "replicate",
             "category": "h"
         },
         {
-            "icon": "https://huggingface.co/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=huggingface.co&sz=64",
             "url": "https://huggingface.co/",
             "description": "AI Models & Datasets",
             "name": "huggingface",
             "category": "h"
         },
         {
-            "icon": "https://10015.io/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=10015.io&sz=64",
             "url": "https://10015.io/",
             "description": "AI Tool Collection",
             "name": "10015",
             "category": "h"
         },
         {
-            "icon": "https://get.imagica.ai/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=get.imagica.ai&sz=64",
             "url": "https://get.imagica.ai/",
             "description": "AI Creativity Tool",
             "name": "imagica",
             "category": "h"
         },
         {
-            "icon": "https://www.playbook.com/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=www.playbook.com&sz=64",
             "url": "https://www.playbook.com/",
             "description": "Creative Asset Management",
             "name": "playbook",
             "category": "h"
         },
         {
-            "icon": "https://www.dafont.com/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=www.dafont.com&sz=64",
             "url": "https://www.dafont.com/",
             "description": "Free Font Library",
             "name": "dafont",
             "category": "h"
         },
         {
-            "icon": "https://www.cofolios.com/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=www.cofolios.com&sz=64",
             "url": "https://www.cofolios.com/",
             "description": "Product Designer Portfolios",
             "name": "cofolios",
             "category": "h"
         },
         {
-            "icon": "https://aframe.io/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=aframe.io&sz=64",
             "url": "https://aframe.io/",
             "description": "WebVR Framework",
             "name": "aframe",
             "category": "h"
         },
         {
-            "icon": "https://www.freefaces.gallery/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=www.freefaces.gallery&sz=64",
             "url": "https://www.freefaces.gallery",
             "description": "Free Faces Font Collection",
             "name": "freefaces",
             "category": "h"
         },
         {
-            "icon": "https://www.fontspace.com/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=www.fontspace.com&sz=64",
             "url": "https://www.fontspace.com/",
             "description": "Free Fonts",
             "name": "fontspace",
             "category": "h"
         },
         {
-            "icon": "https://www.fontshare.com/favicon.ico",
+            "icon": "https://www.google.com/s2/favicons?domain=www.fontshare.com&sz=64",
             "url": "https://www.fontshare.com/",
             "description": "Modern Fonts",
             "name": "fontshare",
