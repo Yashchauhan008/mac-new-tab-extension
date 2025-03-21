@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "A feature-rich new tab experience with customizable clock faces, 7 multicolor themes, AI shortcuts, Apple Dock!",
   "permissions": ["search"],
-	"optional_permissions": ["bookmarks"],
 	"host_permissions": [
 		"https://www.google.com/complete/search*",
 		"https://duckduckgo.com/ac/*",
